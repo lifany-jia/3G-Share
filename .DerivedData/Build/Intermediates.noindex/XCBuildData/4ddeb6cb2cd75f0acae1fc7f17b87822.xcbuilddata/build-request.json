@@ -1,0 +1,72 @@
+{
+  "buildCommand" : {
+    "command" : "build",
+    "skipDependencies" : false,
+    "style" : "buildOnly"
+  },
+  "configuredTargets" : [
+    {
+      "guid" : "832002f558c79b58548e4bdd73c1a633f4d875d879f23d50aaf1426e2e4ecad0"
+    }
+  ],
+  "containerPath" : "/Users/lifany/Desktop/oc Learning/oc/UIKit/3GShare/3GShare.xcodeproj",
+  "continueBuildingAfterErrors" : false,
+  "dependencyScope" : "workspace",
+  "enableIndexBuildArena" : false,
+  "hideShellScriptEnvironment" : false,
+  "parameters" : {
+    "action" : "build",
+    "activeArchitecture" : "arm64",
+    "activeRunDestination" : {
+      "disableOnlyActiveArch" : false,
+      "platform" : "iphoneos",
+      "sdk" : "iphoneos26.2",
+      "sdkVariant" : "iphoneos",
+      "supportedArchitectures" : [
+        "arm64e",
+        "arm64",
+        "x86_64"
+      ],
+      "targetArchitecture" : "arm64"
+    },
+    "arenaInfo" : {
+      "buildIntermediatesPath" : "/Users/lifany/Desktop/oc Learning/oc/UIKit/3GShare/.DerivedData/Build/Intermediates.noindex",
+      "buildProductsPath" : "/Users/lifany/Desktop/oc Learning/oc/UIKit/3GShare/.DerivedData/Build/Products",
+      "derivedDataPath" : "/Users/lifany/Desktop/oc Learning/oc/UIKit/3GShare/.DerivedData",
+      "indexDataStoreFolderPath" : "/Users/lifany/Desktop/oc Learning/oc/UIKit/3GShare/.DerivedData/Index.noindex/DataStore",
+      "indexEnableDataStore" : true,
+      "indexPCHPath" : "/Users/lifany/Desktop/oc Learning/oc/UIKit/3GShare/.DerivedData/Index.noindex/PrecompiledHeaders",
+      "pchPath" : "/Users/lifany/Desktop/oc Learning/oc/UIKit/3GShare/.DerivedData/Build/Intermediates.noindex/PrecompiledHeaders"
+    },
+    "configurationName" : "Debug",
+    "overrides" : {
+      "commandLine" : {
+        "table" : {
+
+        }
+      },
+      "synthesized" : {
+        "table" : {
+          "ACTION" : "build",
+          "ASSETCATALOG_FILTER_FOR_DEVICE_MODEL" : "MacFamily20,1",
+          "ASSETCATALOG_FILTER_FOR_DEVICE_OS_VERSION" : "26.3",
+          "ASSETCATALOG_FILTER_FOR_THINNING_DEVICE_CONFIGURATION" : "MacFamily20,1",
+          "BUILD_ACTIVE_RESOURCES_ONLY" : "YES",
+          "ENABLE_PREVIEWS" : "NO",
+          "ENABLE_XOJIT_PREVIEWS" : "YES",
+          "ONLY_ACTIVE_ARCH" : "YES",
+          "TARGET_DEVICE_IDENTIFIER" : "00008132-0014501021D0401C",
+          "TARGET_DEVICE_MODEL" : "Mac16,12",
+          "TARGET_DEVICE_OS_VERSION" : "26.3",
+          "TARGET_DEVICE_PLATFORM_NAME" : "macosx"
+        }
+      }
+    }
+  },
+  "schemeCommand" : "launch",
+  "showNonLoggedProgress" : true,
+  "useDryRun" : false,
+  "useImplicitDependencies" : true,
+  "useLegacyBuildLocations" : false,
+  "useParallelTargets" : true
+}

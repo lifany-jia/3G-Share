@@ -17,6 +17,11 @@
 - (void)scene:(UIScene *)scene willConnectToSession:(UISceneSession *)session options:(UISceneConnectionOptions *)connectionOptions {
     
     self.window = [[UIWindow alloc] initWithWindowScene:(UIWindowScene *)scene];
+    // 键盘弹起后LoginVC.view上移回漏出window的视图，所以要修改window的backgroundColor
+    self.window.backgroundColor = [UIColor colorWithRed:53.0/255.0
+                                                      green:143.0/255.0
+                                                       blue:203.0/255.0
+                                                      alpha:1.0];
     LoginVC *login = [[LoginVC alloc] init];
     UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:login];
     self.window.rootViewController = nav;
