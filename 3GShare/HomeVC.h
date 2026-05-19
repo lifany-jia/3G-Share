@@ -6,11 +6,10 @@
 //
 
 #import <UIKit/UIKit.h>
-
+#import "HomeModel.h"
 NS_ASSUME_NONNULL_BEGIN
 
 @interface HomeVC : UIViewController
-
 @end
 
 NS_ASSUME_NONNULL_END

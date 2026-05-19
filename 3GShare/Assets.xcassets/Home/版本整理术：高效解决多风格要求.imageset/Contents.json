@@ -1,11 +1,11 @@
 {
   "images" : [
     {
+      "filename" : "list_img4.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "radio_button_user_normal.png",
       "idiom" : "universal",
       "scale" : "2x"
     },

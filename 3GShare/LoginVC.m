@@ -234,16 +234,25 @@
     UITabBarController *tabBarVC = [[UITabBarController alloc] init];
     
     HomeVC *home = [[HomeVC alloc] init];
-    home.tabBarItem = [[UITabBarItem alloc] initWithTitle:nil image:[UIImage imageNamed:@"home"] selectedImage:[UIImage imageNamed:@"homeSelection"]];
+    home.tabBarItem = [[UITabBarItem alloc] initWithTitle:nil image:[UIImage systemImageNamed:@"house"] selectedImage:[UIImage systemImageNamed:@"house.fill"]];
+    UINavigationController *homeNav = [[UINavigationController alloc] initWithRootViewController:home];
+    
     SearchVC *search = [[SearchVC alloc] init];
-    search.tabBarItem = [[UITabBarItem alloc] initWithTitle:nil image:[UIImage imageNamed:@"search"] selectedImage:[UIImage imageNamed:@"searchSelection"]];
+    search.tabBarItem = [[UITabBarItem alloc] initWithTitle:nil image:[UIImage systemImageNamed:@"magnifyingglass"] selectedImage:[UIImage systemImageNamed:@"magnifyingglass.circle.fill"]];
+    UINavigationController *searchNav = [[UINavigationController alloc] initWithRootViewController:search];
+    
     ArticleVC *article = [[ArticleVC alloc] init];
-    article.tabBarItem = [[UITabBarItem alloc] initWithTitle:nil image:[UIImage imageNamed:@"article"] selectedImage:[UIImage imageNamed:@"articleSelection"]];
+    article.tabBarItem = [[UITabBarItem alloc] initWithTitle:nil image:[UIImage systemImageNamed:@"square.and.pencil"] selectedImage:[UIImage systemImageNamed:@"pencil"]];
+    UINavigationController *articleNav = [[UINavigationController alloc] initWithRootViewController:article];
+    
     TaskVC *task = [[TaskVC alloc] init];
-    task.tabBarItem = [[UITabBarItem alloc] initWithTitle:nil image:[UIImage imageNamed:@"task"] selectedImage:[UIImage imageNamed:@"taskSelection"]];
+    task.tabBarItem = [[UITabBarItem alloc] initWithTitle:nil image:[UIImage systemImageNamed:@"trophy"] selectedImage:[UIImage systemImageNamed:@"trophy.fill"]];
+    UINavigationController *taskNav = [[UINavigationController alloc] initWithRootViewController:task];
+    
     PersonVC *person = [[PersonVC alloc] init];
-    person.tabBarItem = [[UITabBarItem alloc] initWithTitle:nil image:[UIImage imageNamed:@"person"] selectedImage:[UIImage imageNamed:@"personSelection"]];
-    tabBarVC.viewControllers = @[home, search, article, task, person];
+    person.tabBarItem = [[UITabBarItem alloc] initWithTitle:nil image:[UIImage systemImageNamed:@"person.crop.circle"] selectedImage:[UIImage systemImageNamed:@"person.circle.fill"]];
+    UINavigationController *personNav = [[UINavigationController alloc] initWithRootViewController:person];
+    tabBarVC.viewControllers = @[homeNav, searchNav, articleNav, taskNav, personNav];
     
     UIWindow *window = self.view.window;
     if (!window) return;

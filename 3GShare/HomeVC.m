@@ -6,17 +6,88 @@
 //
 
 #import "HomeVC.h"
-
-@interface HomeVC ()
-
+#import "HomeHeaderCell.h"
+#import "HomeArticelCell.h"
+@interface HomeVC () <UITableViewDelegate, UITableViewDataSource>
+@property (nonatomic, strong) UITableView *tableView;
+@property (nonatomic, strong) HomeModel *model;
 @end
 
 @implementation HomeVC
-
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        self.model = [HomeModel defaultHomeModel];
+    }
+    return self;
+}
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
+    UIImageView *shareBar = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"shareLabel"]];
+//    shareBar.contentMode = UIViewContentModeScaleAspectFill;
+    shareBar.frame = CGRectMake(0, 0, self.view.bounds.size.width, 60);
+    self.navigationItem.titleView = shareBar;
+    
+    self.tableView = [[UITableView alloc] initWithFrame:self.view.bounds];
+    self.tableView.delegate = self;
+    self.tableView.dataSource = self;
+    // 透出的背景色浅灰色，使其看起来像分隔开
+    // UIColor 的一个系统预定义颜色，专门用于分组样式表格的背景色
+    self.tableView.backgroundColor = [UIColor groupTableViewBackgroundColor];
+    // 不使用分割线
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    
+    [self.tableView registerClass:[HomeArticelCell class] forCellReuseIdentifier:@"cell"];
+    [self.tableView registerClass:[HomeHeaderCell class] forCellReuseIdentifier:@"headerCell"];
+    [self.view addSubview:self.tableView];
 }
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    return 2;
+}
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    if (section == 0) {
+        return 1;
+    } else {
+        return self.model.articles.count;
+    }
+}
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (indexPath.section == 0 && indexPath.row == 0) {
+        HomeHeaderCell *headerCell = [tableView dequeueReusableCellWithIdentifier:@"headerCell" forIndexPath:indexPath];
+        return headerCell;
+    } else if (indexPath.section == 1) {
+        HomeArticelCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell" forIndexPath:indexPath];
+        [cell updateWithModel:self.model row:indexPath.row];
+        return cell;
+    }
+    return nil;
+}
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (indexPath.section == 0) {
+        return 200;
+    }
+    return UITableViewAutomaticDimension;
+}
+- (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return 350;
+}
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+}
+
+// 因为我把自动轮播写在cell，定时器的开启关闭需要viewWillAppear这类函数，但是cell没有
+// 所以只能通过tableView监听cell的出现和消失
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (indexPath.section == 0 && [cell isKindOfClass:[HomeHeaderCell class]]) {
+        [(HomeHeaderCell *)cell startTime];
+    }
+}
+- (void)tableView:(UITableView *)tableView didEndDisplayingCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (indexPath.section == 0 && [cell isKindOfClass:[HomeHeaderCell class]]) {
+        [(HomeHeaderCell *)cell stopTime];
+    }
+}
+
 
 /*
 #pragma mark - Navigation
