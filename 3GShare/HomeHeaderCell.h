@@ -11,6 +11,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface HomeHeaderCell : UITableViewCell
+- (void)configWithModel:(NSArray *) imas;
 - (void)startTime;
 - (void)stopTime;
 @end

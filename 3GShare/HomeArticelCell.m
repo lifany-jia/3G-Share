@@ -39,11 +39,11 @@
     // 让所有控件添加在这张白色卡片上
     UIView *containerView = [[UIView alloc] init];
     containerView.backgroundColor = [UIColor whiteColor];
-    containerView.layer.cornerRadius = 18;
+    containerView.layer.cornerRadius = 0;
     containerView.clipsToBounds = YES;
     [self.contentView addSubview:containerView];
     [containerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.equalTo(self.contentView).insets(UIEdgeInsetsMake(5, 5, 5, 5));
+        make.edges.equalTo(self.contentView).insets(UIEdgeInsetsMake(7, 0, 7, 0));
     }];
     
     // 设置cell的背景透明，透出tableVIew的背景色，就会看起来每一个cell被分隔开
@@ -52,7 +52,7 @@
     
     self.imaV = [[UIImageView alloc] init];
     self.imaV.contentMode = UIViewContentModeScaleAspectFit;
-    self.imaV.layer.cornerRadius = 18;
+    self.imaV.layer.cornerRadius = 0;
     self.imaV.clipsToBounds = YES;
     [containerView addSubview:self.imaV];
     [self.imaV mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -65,6 +65,7 @@
     
     self.articleName = [[UILabel alloc] init];
     self.articleName.font = [UIFont systemFontOfSize:18];
+    self.articleName.textColor = [UIColor labelColor];
     self.articleName.numberOfLines = 0;
     [containerView addSubview:self.articleName];
     [self.articleName mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -75,14 +76,16 @@
     
     self.authorName = [[UILabel alloc] init];
     self.authorName.font = [UIFont systemFontOfSize:13];
+    self.authorName.textColor = [UIColor secondaryLabelColor];
     [containerView addSubview:self.authorName];
     [self.authorName mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.equalTo(self.articleName.mas_bottom).offset(7);
+            make.top.equalTo(self.articleName.mas_bottom).offset(5);
             make.left.equalTo(self.articleName);
     }];
     
     self.taG = [[UILabel alloc] init];
     self.taG.font = [UIFont systemFontOfSize:13];
+    self.taG.textColor = [UIColor secondaryLabelColor];
     [containerView addSubview:self.taG];
     [self.taG mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.equalTo(self.authorName.mas_bottom).offset(7);
@@ -91,58 +94,72 @@
     
     self.time = [[UILabel alloc] init];
     self.time.font = [UIFont systemFontOfSize:10];
+    self.time.textColor = [UIColor tertiaryLabelColor];
     [containerView addSubview:self.time];
     [self.time mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.equalTo(self.taG.mas_bottom).offset(7);
+            make.top.equalTo(self.taG.mas_bottom).offset(5);
             make.right.equalTo(containerView).offset(-15);
     }];
     
     self.likes = [UIButton buttonWithType:UIButtonTypeCustom];
-    [self.likes setImage:[UIImage systemImageNamed:@"heart.fill"] forState:UIControlStateNormal] ;
-    self.likes.tintColor = [UIColor blueColor];
+    [self.likes setImage:[UIImage systemImageNamed:@"heart"] forState:UIControlStateNormal] ;
+    [self.likes setImage:[UIImage systemImageNamed:@"heart.fill"] forState:UIControlStateSelected];
+    [self.likes addTarget:self action:@selector(likeSelected) forControlEvents:UIControlEventTouchUpInside];
+    self.likes.tintColor = [UIColor colorWithRed:53.0 / 255.0 green:143.0 / 255.0 blue:203.0 / 255.0 alpha:1.0];
     [containerView addSubview:self.likes];
     [self.likes mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.equalTo(self.time.mas_bottom).offset(10);
+            make.top.equalTo(self.time.mas_bottom).offset(12);
             make.left.equalTo(self.articleName);
             make.height.mas_equalTo(18);
-            make.width.mas_equalTo(20);
+            make.width.mas_equalTo(40);
             make.bottom.equalTo(containerView).offset(-10);
     }];
     
     self.views = [UIButton buttonWithType:UIButtonTypeCustom];
     [self.views setImage:[UIImage systemImageNamed:@"eye"] forState:UIControlStateNormal] ;
-    self.views.tintColor = [UIColor blueColor];
+    self.views.tintColor = [UIColor colorWithRed:53.0 / 255.0 green:143.0 / 255.0 blue:203.0 / 255.0 alpha:1.0];
     [containerView addSubview:self.views];
     [self.views mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.equalTo(self.likes);
-            make.left.equalTo(self.likes.mas_right).offset(30);
+            make.left.equalTo(self.likes.mas_right).offset(15);
             make.height.mas_equalTo(18);
-            make.width.mas_equalTo(20);
+            make.width.mas_equalTo(55);
     }];
     
     self.shares = [UIButton buttonWithType:UIButtonTypeCustom];
     [self.shares setImage:[UIImage systemImageNamed:@"arrowshape.turn.up.right"] forState:UIControlStateNormal] ;
-    self.shares.tintColor = [UIColor blueColor];
+    self.shares.tintColor = [UIColor colorWithRed:53.0 / 255.0 green:143.0 / 255.0 blue:203.0 / 255.0 alpha:1.0];
     [containerView addSubview:self.shares];
     [self.shares mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.equalTo(self.likes);
-            make.left.equalTo(self.views.mas_right).offset(30);
+            make.left.equalTo(self.views.mas_right).offset(15);
             make.height.mas_equalTo(18);
-            make.width.mas_equalTo(20);
+            make.width.mas_equalTo(40);
     }];
     
 }
-- (void)updateWithModel:(HomeModel *)model row:(NSInteger)row {
-    self.imaV.image = [UIImage imageNamed:model.articles[row].articleName];
-    self.articleName.text = model.articles[row].articleName;
-    self.authorName.text = model.articles[row].authorName;
-    self.taG.text = model.articles[row].tag;
-    self.time.text = model.articles[row].time;
-    [self.likes setTitle:[NSString stringWithFormat:@"%ld", (long)model.articles[row].likes]
+- (void)updateWithModel:(NSArray<ArticleModel *> *) article row:(NSInteger)row{
+    self.imaV.image = [UIImage imageNamed:article[row].articleName];
+    self.articleName.text = article[row].articleName;
+    self.authorName.text = article[row].authorName;
+    self.taG.text = article[row].tag;
+    self.time.text = article[row].time;
+    [self.likes setTitle:[NSString stringWithFormat:@"%ld", (long)article[row].likes]
                forState:UIControlStateNormal];
+    [self.likes setTitleColor:[UIColor colorWithRed:53.0 / 255.0 green:143.0 / 255.0 blue:203.0 / 255.0 alpha:1.0] forState:UIControlStateNormal];
+    self.likes.titleLabel.font = [UIFont systemFontOfSize:10];
     // 不可以这样写
     //self.views.titleLabel.text = [NSString stringWithFormat:@"%ld", (long)model.articles[row].views];
-    [self.views setTitle:[NSString stringWithFormat:@"%ld", (long)model.articles[row].views] forState:UIControlStateNormal];
-    [self.shares setTitle:[NSString stringWithFormat:@"%ld", (long)model.articles[row].shares] forState:UIControlStateNormal];
+    [self.views setTitle:[NSString stringWithFormat:@"%ld", (long)article[row].views] forState:UIControlStateNormal];
+    [self.views setTitleColor:[UIColor colorWithRed:53.0 / 255.0 green:143.0 / 255.0 blue:203.0 / 255.0 alpha:1.0] forState:UIControlStateNormal];
+    self.views.titleLabel.font = [UIFont systemFontOfSize:10];
+    
+    [self.shares setTitle:[NSString stringWithFormat:@"%ld", (long)article[row].shares] forState:UIControlStateNormal];
+    [self.shares setTitleColor:[UIColor colorWithRed:53.0 / 255.0 green:143.0 / 255.0 blue:203.0 / 255.0 alpha:1.0] forState:UIControlStateNormal];
+    self.shares.titleLabel.font = [UIFont systemFontOfSize:10];
+}
+- (void)likeSelected {
+    self.likes.selected = !self.likes.selected;
+    
 }
 @end

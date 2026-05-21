@@ -1,0 +1,183 @@
+//
+//  HolidayVC.m
+//  3GShare
+//
+//  Created by lifany on 2026/5/20.
+//
+
+#import "HolidayVC.h"
+#import "ArticleModel.h"
+#import "HolidayPhotoCell.h"
+#import "UserInfo.h"
+#import <Masonry/Masonry.h>
+@interface HolidayVC () <UITableViewDelegate, UITableViewDataSource>
+@property (nonatomic, strong) UIView *headerView;
+@property (nonatomic, strong) UITableView *tableView;
+@property (nonatomic, strong) TypeArtiModel *model;
+@property (nonatomic, strong) UserInfo *user;
+@property (nonatomic, strong) UIButton *like;
+@end
+
+@implementation HolidayVC
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        self.model = [TypeArtiModel defaultTypeArtiModel];
+        self.user = [UserInfo defaultUserInfo];
+    }
+    return self;
+}
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    self.navigationItem.title = @"假日";
+    
+#pragma mark - headerView
+    self.headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 101, self.view.bounds.size.width, 100)];
+    UIImage *ava = [UIImage imageNamed:self.user.avatar];
+    UIImageView *avaImaV = [[UIImageView alloc] initWithImage:ava];
+    [self.headerView addSubview:avaImaV];
+    
+    UILabel *name = [[UILabel alloc] init];
+    name.font = [UIFont systemFontOfSize:26];
+    name.text = self.user.userName;
+    name.textColor = [UIColor labelColor];
+    [self.headerView addSubview:name];
+    
+    UILabel *articleName = [[UILabel alloc] init];
+    articleName.font = [UIFont systemFontOfSize:22];
+    articleName.text = self.model.userArticles[0].articleName;
+    articleName.textColor = [UIColor labelColor];
+    [self.headerView addSubview:articleName];
+    
+    UILabel *time = [[UILabel alloc] init];
+    time.font = [UIFont systemFontOfSize:15];
+    time.text = self.model.userArticles[0].time;
+    time.textColor = [UIColor secondaryLabelColor];
+    [self.headerView addSubview:time];
+    
+    self.like = [UIButton buttonWithType:UIButtonTypeCustom];
+    [self.like setImage:[UIImage systemImageNamed:@"heart" ]forState:UIControlStateNormal];
+    [self.like setImage:[UIImage systemImageNamed:@"heart.fill" ]forState:UIControlStateSelected];
+    [self.like setTitle:[NSString stringWithFormat:@"%ld", (long)self.model.userArticles[0].likes] forState:UIControlStateNormal];
+    [self.like addTarget:self action:@selector(likeAction) forControlEvents:UIControlEventTouchUpInside];
+    self.like.titleLabel.font = [UIFont systemFontOfSize:14];
+    self.like.tintColor = [UIColor colorWithRed:53.0 / 255.0 green:143.0 / 255.0 blue:203.0 / 255.0 alpha:1.0];
+    [self.like setTitleColor:[UIColor colorWithRed:53.0 / 255.0 green:143.0 / 255.0 blue:203.0 / 255.0 alpha:1.0] forState:UIControlStateNormal];
+    [self.headerView addSubview:self.like];
+    
+    UIButton *views = [UIButton buttonWithType:UIButtonTypeCustom];
+    [views setImage:[UIImage systemImageNamed:@"eye"] forState:UIControlStateNormal];
+    [views setTitle:[NSString stringWithFormat:@"%ld", (long)self.model.userArticles[0].views] forState:UIControlStateNormal];
+    views.titleLabel.font = [UIFont systemFontOfSize:14];
+    views.tintColor = [UIColor colorWithRed:53.0 / 255.0 green:143.0 / 255.0 blue:203.0 / 255.0 alpha:1.0];
+    [views setTitleColor:[UIColor colorWithRed:53.0 / 255.0 green:143.0 / 255.0 blue:203.0 / 255.0 alpha:1.0] forState:UIControlStateNormal];
+    [self.headerView addSubview:views];
+    
+    UIButton *shares = [UIButton buttonWithType:UIButtonTypeCustom];
+    [shares setImage:[UIImage systemImageNamed:@"arrowshape.turn.up.right"] forState:UIControlStateNormal];
+    [shares setTitle:[NSString stringWithFormat:@"%ld", (long)self.model.userArticles[0].shares] forState:UIControlStateNormal];
+    shares.titleLabel.font = [UIFont systemFontOfSize:14];
+    shares.tintColor = [UIColor colorWithRed:53.0 / 255.0 green:143.0 / 255.0 blue:203.0 / 255.0 alpha:1.0];
+    [shares setTitleColor:[UIColor colorWithRed:53.0 / 255.0 green:143.0 / 255.0 blue:203.0 / 255.0 alpha:1.0] forState:UIControlStateNormal];
+    [self.headerView addSubview:shares];
+    
+    [self.view addSubview:self.headerView];
+    
+    [avaImaV mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.equalTo(self.headerView);
+            make.left.equalTo(self.headerView);
+            make.bottom.equalTo(self.headerView);
+            make.width.mas_offset(self.headerView.bounds.size.height);
+    }];
+    [name mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.equalTo(self.headerView).offset(15);
+            make.left.equalTo(avaImaV.mas_right).offset(10);
+    }];
+    [articleName mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.bottom.equalTo(self.headerView).offset(-15);
+            make.left.equalTo(name);
+    }];
+    [time mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.bottom.equalTo(name);
+            make.right.equalTo(self.headerView).offset(-10);
+    }];
+    [shares mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.bottom.equalTo(self.headerView).offset(-15);
+            make.right.equalTo(time);
+    }];
+    [views mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.equalTo(shares);
+            make.right.equalTo(shares.mas_left).offset(-15);
+            make.width.mas_equalTo(50);
+    }];
+    [self.like mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.equalTo(shares);
+            make.right.equalTo(views.mas_left).offset(-15);
+            make.width.mas_equalTo(50);
+    }];
+#pragma mark - Divider
+    UIView *divider = [[UIView alloc] init];
+    // 系统自动适配深色模式的分割线颜色
+    divider.backgroundColor = [UIColor separatorColor];
+    [self.view addSubview:divider];
+    [divider mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.equalTo(self.headerView.mas_bottom);
+            make.left.equalTo(self.view);
+            make.right.equalTo(self.view).offset(-10);
+            make.height.mas_equalTo(0.5);
+    }];
+#pragma mark - ContentView
+    self.tableView = [[UITableView alloc] init];
+    [self.view addSubview:self.tableView];
+    [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.equalTo(divider.mas_bottom);
+            make.left.equalTo(self.view).offset(10);
+            make.right.equalTo(self.view).offset(-10);
+            make.bottom.equalTo(self.view);
+    }];
+    
+    UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 60)];
+    UILabel *content = [[UILabel alloc] init];
+    content.text = self.model.holiday[@"content"];
+    content.font = [UIFont systemFontOfSize:17];
+    [contentView addSubview:content];
+    [content mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.edges.equalTo(contentView);
+    }];
+    self.tableView.tableHeaderView = contentView;
+    self.tableView.delegate = self;
+    self.tableView.dataSource = self;
+    self.tableView.rowHeight = UITableViewAutomaticDimension;
+    self.tableView.separatorStyle = NO;
+    self.tableView.estimatedRowHeight = 200;
+    [self.tableView registerClass:[HolidayPhotoCell class] forCellReuseIdentifier:@"cell"];
+}
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    // 因为这里的self.model.holiday是一个字典，字典的value是id类型
+    // 可以对id类型进行方法，但是不可以使用属性count，所以要先转化一下类型
+    NSArray *images = self.model.holiday[@"images"];
+    return images.count;
+}
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    HolidayPhotoCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell" forIndexPath:indexPath];
+    [cell updateWithModel:self.model.holiday[@"images"] index:indexPath.row];
+    return cell;
+}
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+}
+- (void)likeAction {
+    self.like.selected = !self.like.selected;
+}
+/*
+#pragma mark - Navigation
+
+// In a storyboard-based application, you will often want to do a little preparation before navigation
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    // Get the new view controller using [segue destinationViewController].
+    // Pass the selected object to the new view controller.
+}
+*/
+
+@end

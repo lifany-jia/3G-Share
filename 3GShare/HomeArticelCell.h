@@ -10,7 +10,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface HomeArticelCell : UITableViewCell
-- (void)updateWithModel:(HomeModel *)model row:(NSInteger) row;
+- (void)updateWithModel:(NSArray<ArticleModel *> *) article row:(NSInteger) row;
 @end
 
 NS_ASSUME_NONNULL_END

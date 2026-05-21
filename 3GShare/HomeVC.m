@@ -7,6 +7,8 @@
 
 #import "HomeVC.h"
 #import "HomeHeaderCell.h"
+#import "HolidayVC.h"
+#import "HomeModel.h"
 #import "HomeArticelCell.h"
 @interface HomeVC () <UITableViewDelegate, UITableViewDataSource>
 @property (nonatomic, strong) UITableView *tableView;
@@ -23,10 +25,17 @@
 }
 - (void)viewDidLoad {
     [super viewDidLoad];
-    UIImageView *shareBar = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"shareLabel"]];
-//    shareBar.contentMode = UIViewContentModeScaleAspectFill;
-    shareBar.frame = CGRectMake(0, 0, self.view.bounds.size.width, 60);
-    self.navigationItem.titleView = shareBar;
+    UINavigationBarAppearance *appearance = [[UINavigationBarAppearance alloc] init];
+    [appearance configureWithTransparentBackground]; // 透明背景
+    // 设置半透明背景色（alpha < 1 就能透出下面）
+    appearance.backgroundColor = [[UIColor colorWithRed:53.0 / 255.0 green:143.0 / 255.0 blue:203.0 / 255.0 alpha:1.0] colorWithAlphaComponent:0.9];
+    appearance.titleTextAttributes = @{
+        NSFontAttributeName:[UIFont systemFontOfSize:30],
+        NSForegroundColorAttributeName:[UIColor whiteColor]
+    };
+    self.navigationItem.title = @"SHARE";
+    self.navigationController.navigationBar.standardAppearance = appearance;
+    self.navigationController.navigationBar.scrollEdgeAppearance = appearance;
     
     self.tableView = [[UITableView alloc] initWithFrame:self.view.bounds];
     self.tableView.delegate = self;
@@ -54,10 +63,11 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.section == 0 && indexPath.row == 0) {
         HomeHeaderCell *headerCell = [tableView dequeueReusableCellWithIdentifier:@"headerCell" forIndexPath:indexPath];
+        [headerCell configWithModel:self.model.adImageName];
         return headerCell;
     } else if (indexPath.section == 1) {
         HomeArticelCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell" forIndexPath:indexPath];
-        [cell updateWithModel:self.model row:indexPath.row];
+        [cell updateWithModel:self.model.articles row:indexPath.row];
         return cell;
     }
     return nil;
@@ -73,6 +83,10 @@
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    if (indexPath.row == 0) {
+        HolidayVC *holiday = [[HolidayVC alloc] init];
+        [self.navigationController pushViewController:holiday animated:YES];
+    }
 }
 
 // 因为我把自动轮播写在cell，定时器的开启关闭需要viewWillAppear这类函数，但是cell没有

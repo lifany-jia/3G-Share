@@ -35,12 +35,21 @@
     if (![userPassword isEqualToString:password]) {
         return nil;
     }
-    UserInfo *user = [[UserInfo alloc] init];
-    user.userName = name;
-    user.avatar = @"avatar_default";
-    user.sign = @"";
+    UserInfo *user = [UserInfo defaultUserInfo];
     return user;
 }
-
++ (instancetype)defaultUserInfo {
+    static UserInfo *user = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        user = [[UserInfo alloc] init];
+        user.userName = @"share小白";
+        user.avatar = @"avatar";
+        user.sign = @"开心了就笑，不开心了就过会儿再笑";
+        user.label = @"数媒/设计爱好者";
+        user.email = @"186###3@qq.com";
+    });
+    return user;
+}
 
 @end
