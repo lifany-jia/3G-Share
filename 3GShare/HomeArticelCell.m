@@ -39,7 +39,6 @@
     // 让所有控件添加在这张白色卡片上
     UIView *containerView = [[UIView alloc] init];
     containerView.backgroundColor = [UIColor whiteColor];
-    containerView.layer.cornerRadius = 0;
     containerView.clipsToBounds = YES;
     [self.contentView addSubview:containerView];
     [containerView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -160,6 +159,12 @@
 }
 - (void)likeSelected {
     self.likes.selected = !self.likes.selected;
-    
+    if (self.likes.selected) {
+        [self.likes setTitle:[NSString stringWithFormat:@"%ld", (NSInteger)self.likes.titleLabel.text + 1]
+                   forState:UIControlStateNormal];
+    } else {
+        [self.likes setTitle:[NSString stringWithFormat:@"%ld", (NSInteger)self.likes.titleLabel.text - 1]
+                   forState:UIControlStateNormal];
+    }
 }
 @end

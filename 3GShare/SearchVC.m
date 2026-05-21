@@ -15,7 +15,15 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
+    UINavigationBarAppearance *appearance = [[UINavigationBarAppearance alloc] init];
+    appearance.backgroundColor = [[UIColor colorWithRed:53.0 / 255.0 green:143.0 / 255.0 blue:203.0 / 255.0 alpha:1.0] colorWithAlphaComponent:0.9];
+    appearance.titleTextAttributes = @{
+        NSFontAttributeName:[UIFont systemFontOfSize:30],
+        NSForegroundColorAttributeName:[UIColor whiteColor]
+    };
+    self.navigationItem.title = @"搜索";
+    self.navigationController.navigationBar.standardAppearance = appearance;
+    self.navigationController.navigationBar.scrollEdgeAppearance = appearance;
 }
 
 /*

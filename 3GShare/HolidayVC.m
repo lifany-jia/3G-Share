@@ -39,13 +39,13 @@
     [self.headerView addSubview:avaImaV];
     
     UILabel *name = [[UILabel alloc] init];
-    name.font = [UIFont systemFontOfSize:26];
+    name.font = [UIFont systemFontOfSize:25];
     name.text = self.user.userName;
     name.textColor = [UIColor labelColor];
     [self.headerView addSubview:name];
     
     UILabel *articleName = [[UILabel alloc] init];
-    articleName.font = [UIFont systemFontOfSize:22];
+    articleName.font = [UIFont systemFontOfSize:21];
     articleName.text = self.model.userArticles[0].articleName;
     articleName.textColor = [UIColor labelColor];
     [self.headerView addSubview:articleName];
@@ -137,13 +137,13 @@
             make.bottom.equalTo(self.view);
     }];
     
-    UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 60)];
+    UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 40)];
     UILabel *content = [[UILabel alloc] init];
     content.text = self.model.holiday[@"content"];
-    content.font = [UIFont systemFontOfSize:17];
+    content.font = [UIFont systemFontOfSize:16];
     [contentView addSubview:content];
     [content mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.edges.equalTo(contentView);
+            make.edges.equalTo(contentView).insets(UIEdgeInsetsMake(12, 0, 0, 0));
     }];
     self.tableView.tableHeaderView = contentView;
     self.tableView.delegate = self;

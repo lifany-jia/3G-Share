@@ -119,6 +119,10 @@
     [self.scr setContentOffset:CGPointMake(self.scr.bounds.size.width * page, 0)];
 }
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    // 因为tableView也继承于UIScrollView
+    // 所以 tableView 滚动也会触发 scrollViewDidScroll:，就会导致竖直滑动tableView的时候segmentControl也会移动
+    // 只处理横向翻页的 scr，忽略 tableView 的滚动
+    if (scrollView != self.scr) return;
     CGFloat pageWidth = scrollView.bounds.size.width;
     CGFloat offset = scrollView.contentOffset.x;
     CGFloat realPage = offset / pageWidth;
