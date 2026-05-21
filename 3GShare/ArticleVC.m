@@ -27,6 +27,7 @@
 }
 - (void)viewDidLoad {
     [super viewDidLoad];
+    /*
     UINavigationBarAppearance *appearance = [[UINavigationBarAppearance alloc] init];
     [appearance configureWithTransparentBackground]; // 透明背景
     // 设置半透明背景色（alpha < 1 就能透出下面）
@@ -35,9 +36,10 @@
         NSFontAttributeName:[UIFont systemFontOfSize:30],
         NSForegroundColorAttributeName:[UIColor whiteColor]
     };
+     */
     self.navigationItem.title = @"文章";
-    self.navigationController.navigationBar.standardAppearance = appearance;
-    self.navigationController.navigationBar.scrollEdgeAppearance = appearance;
+//    self.navigationController.navigationBar.standardAppearance = appearance;
+//    self.navigationController.navigationBar.scrollEdgeAppearance = appearance;
     
     self.titleSeg = [[UISegmentedControl alloc] initWithFrame:CGRectMake(0, 101, self.view.bounds.size.width, 50)];
     [self.titleSeg insertSegmentWithTitle:@"全部文章" atIndex:0 animated:YES];

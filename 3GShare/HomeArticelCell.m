@@ -16,6 +16,7 @@
 @property (nonatomic, strong) UIButton *likes;
 @property (nonatomic, strong) UIButton *views;
 @property (nonatomic, strong) UIButton *shares;
+@property (nonatomic, assign) NSInteger likeCount;
 @end
 @implementation HomeArticelCell
 
@@ -143,7 +144,8 @@
     self.authorName.text = article[row].authorName;
     self.taG.text = article[row].tag;
     self.time.text = article[row].time;
-    [self.likes setTitle:[NSString stringWithFormat:@"%ld", (long)article[row].likes]
+    self.likeCount = (long)article[row].likes;
+    [self.likes setTitle:[NSString stringWithFormat:@"%ld", self.likeCount]
                forState:UIControlStateNormal];
     [self.likes setTitleColor:[UIColor colorWithRed:53.0 / 255.0 green:143.0 / 255.0 blue:203.0 / 255.0 alpha:1.0] forState:UIControlStateNormal];
     self.likes.titleLabel.font = [UIFont systemFontOfSize:10];
@@ -160,10 +162,12 @@
 - (void)likeSelected {
     self.likes.selected = !self.likes.selected;
     if (self.likes.selected) {
-        [self.likes setTitle:[NSString stringWithFormat:@"%ld", (NSInteger)self.likes.titleLabel.text + 1]
+        self.likeCount++;
+        [self.likes setTitle:[NSString stringWithFormat:@"%ld", self.likeCount]
                    forState:UIControlStateNormal];
     } else {
-        [self.likes setTitle:[NSString stringWithFormat:@"%ld", (NSInteger)self.likes.titleLabel.text - 1]
+        self.likeCount--;
+        [self.likes setTitle:[NSString stringWithFormat:@"%ld", self.likeCount]
                    forState:UIControlStateNormal];
     }
 }

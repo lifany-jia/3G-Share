@@ -8,7 +8,7 @@
 #import "SearchVC.h"
 
 @interface SearchVC ()
-
+@property (nonatomic, strong) UITextField *search;
 @end
 
 @implementation SearchVC
@@ -24,6 +24,13 @@
     self.navigationItem.title = @"搜索";
     self.navigationController.navigationBar.standardAppearance = appearance;
     self.navigationController.navigationBar.scrollEdgeAppearance = appearance;
+    
+    self.view.backgroundColor = [UIColor groupTableViewBackgroundColor];
+    
+//    UIView *searchView = [[UIView alloc] init];
+//    [self.view addSubview:searchView];
+//    UIImageView *searchIma = [[UIImageView alloc] initWithImage:[UIImage systemImageNamed:@"magnifyingglass"]];
+//    [searchView addSubview:searchView];
 }
 
 /*
