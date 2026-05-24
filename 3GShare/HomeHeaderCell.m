@@ -122,9 +122,11 @@
     }
     [self stopTime];
     __weak typeof(self) weakSelf = self;
-    self.timer = [NSTimer scheduledTimerWithTimeInterval:2.0 repeats:YES block:^(NSTimer * _Nonnull timer) {
+    // 使用 NSRunLoopCommonModes，避免 tableView 滑动时 RunLoop 切到 UITrackingRunLoopMode 导致定时器停摆
+    self.timer = [NSTimer timerWithTimeInterval:2.0 repeats:YES block:^(NSTimer * _Nonnull timer) {
         [weakSelf nextToPage];
     }];
+    [[NSRunLoop currentRunLoop] addTimer:self.timer forMode:NSRunLoopCommonModes];
 }
 // 在cell即将进入复用池时结束定时器
 - (void)stopTime {
