@@ -25,17 +25,7 @@
 }
 - (void)viewDidLoad {
     [super viewDidLoad];
-    UINavigationBarAppearance *appearance = [[UINavigationBarAppearance alloc] init];
-    [appearance configureWithTransparentBackground]; // 透明背景
-    // 设置半透明背景色（alpha < 1 就能透出下面）
-    appearance.backgroundColor = [[UIColor colorWithRed:53.0 / 255.0 green:143.0 / 255.0 blue:203.0 / 255.0 alpha:1.0] colorWithAlphaComponent:0.9];
-    appearance.titleTextAttributes = @{
-        NSFontAttributeName:[UIFont systemFontOfSize:30],
-        NSForegroundColorAttributeName:[UIColor whiteColor]
-    };
     self.navigationItem.title = @"SHARE";
-    self.navigationController.navigationBar.standardAppearance = appearance;
-    self.navigationController.navigationBar.scrollEdgeAppearance = appearance;
     
     self.tableView = [[UITableView alloc] initWithFrame:self.view.bounds];
     self.tableView.delegate = self;

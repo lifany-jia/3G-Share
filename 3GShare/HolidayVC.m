@@ -33,10 +33,16 @@
     self.navigationItem.title = @"假日";
     
 #pragma mark - headerView
-    self.headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 101, self.view.bounds.size.width, 100)];
+    self.headerView = [[UIView alloc] init];
     UIImage *ava = [UIImage imageNamed:self.user.avatar];
     UIImageView *avaImaV = [[UIImageView alloc] initWithImage:ava];
     [self.headerView addSubview:avaImaV];
+    [self.view addSubview:self.headerView];
+    [self.headerView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.equalTo(self.view.mas_safeAreaLayoutGuideTop);
+            make.left.right.equalTo(self.view);
+            make.height.mas_equalTo(100);
+    }];
     
     UILabel *name = [[UILabel alloc] init];
     name.font = [UIFont systemFontOfSize:25];
@@ -82,7 +88,6 @@
     [shares setTitleColor:[UIColor colorWithRed:53.0 / 255.0 green:143.0 / 255.0 blue:203.0 / 255.0 alpha:1.0] forState:UIControlStateNormal];
     [self.headerView addSubview:shares];
     
-    [self.view addSubview:self.headerView];
     
     [avaImaV mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.equalTo(self.headerView);

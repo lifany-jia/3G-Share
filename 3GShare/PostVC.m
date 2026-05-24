@@ -1,21 +1,21 @@
 //
-//  PersonVC.m
+//  PostVC.m
 //  3GShare
 //
-//  Created by lifany on 2026/5/17.
+//  Created by lifany on 2026/5/24.
 //
 
-#import "PersonVC.h"
+#import "PostVC.h"
 
-@interface PersonVC ()
+@interface PostVC ()
 
 @end
 
-@implementation PersonVC
+@implementation PostVC
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.navigationItem.title = @"个人信息";
+    // Do any additional setup after loading the view.
 }
 
 /*

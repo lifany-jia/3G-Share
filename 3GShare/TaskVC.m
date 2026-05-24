@@ -17,21 +17,12 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    UINavigationBarAppearance *appearance = [[UINavigationBarAppearance alloc] init];
-    [appearance configureWithTransparentBackground];
-    appearance.backgroundColor = [[UIColor colorWithRed:53.0 / 255.0 green:143.0 / 255.0 blue:203.0 / 255.0 alpha:1.0] colorWithAlphaComponent:0.9];
-    appearance.titleTextAttributes = @{
-        NSFontAttributeName:[UIFont systemFontOfSize:30],
-        NSForegroundColorAttributeName:[UIColor whiteColor]
-    };
     self.navigationItem.title = @"活动";
-    self.navigationController.navigationBar.standardAppearance = appearance;
-    self.navigationController.navigationBar.scrollEdgeAppearance = appearance;
     
     self.imaName = @[@"冰淇淋", @"小李家", @"插画大赛", @"防晒霜"];
     self.labelName = @[@"GoGo冰淇淋开业啦！！！GoGo！！！", @"小李家蓝莓新品劲爆来袭！", @"用画笔描绘梦想，让世界看见你的色彩", @"阳光守护防晒霜夏日特惠！买一送一活动上线"];
     
-    self.tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 101, self.view.bounds.size.width, self.view.bounds.size.height - 101)];
+    self.tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height)];
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
     self.tableView.rowHeight = UITableViewAutomaticDimension;

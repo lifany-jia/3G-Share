@@ -34,6 +34,7 @@
     UIView *back = [[UIView alloc] init];
     back.backgroundColor = [UIColor whiteColor];
     back.clipsToBounds = YES;
+    back.layer.cornerRadius = 10;
     [self.contentView addSubview:back];
     [back mas_makeConstraints:^(MASConstraintMaker *make) {
             make.edges.equalTo(self.contentView).insets(UIEdgeInsetsMake(5, 10, 5, 10));
@@ -45,8 +46,7 @@
     self.imaV = [[UIImageView alloc] init];
 //    self.imaV.contentMode = UIViewContentModeScaleAspectFit;
     self.imaV.contentMode = UIViewContentModeScaleAspectFill;
-    self.imaV.clipsToBounds = YES;
-    [back addSubview:self.imaV];
+    self.imaV.clipsToBounds = YES;    [back addSubview:self.imaV];
     [self.imaV mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.right.left.equalTo(back);
     }];

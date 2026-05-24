@@ -8,6 +8,7 @@
 #import "ArticleVC.h"
 #import "ArticleModel.h"
 #import "HomeArticelCell.h"
+#import <Masonry/Masonry.h>
 @interface ArticleVC () <UITableViewDelegate, UITableViewDataSource, UIScrollViewDelegate>
 @property (nonatomic, strong) UITableView *featuredView;
 @property (nonatomic, strong) UITableView *trendingView;
@@ -27,21 +28,10 @@
 }
 - (void)viewDidLoad {
     [super viewDidLoad];
-    /*
-    UINavigationBarAppearance *appearance = [[UINavigationBarAppearance alloc] init];
-    [appearance configureWithTransparentBackground]; // 透明背景
-    // 设置半透明背景色（alpha < 1 就能透出下面）
-    appearance.backgroundColor = [[UIColor colorWithRed:53.0 / 255.0 green:143.0 / 255.0 blue:203.0 / 255.0 alpha:1.0] colorWithAlphaComponent:0.9];
-    appearance.titleTextAttributes = @{
-        NSFontAttributeName:[UIFont systemFontOfSize:30],
-        NSForegroundColorAttributeName:[UIColor whiteColor]
-    };
-     */
     self.navigationItem.title = @"文章";
-//    self.navigationController.navigationBar.standardAppearance = appearance;
-//    self.navigationController.navigationBar.scrollEdgeAppearance = appearance;
-    
-    self.titleSeg = [[UISegmentedControl alloc] initWithFrame:CGRectMake(0, 101, self.view.bounds.size.width, 50)];
+    // seg 背景透明，透出玻璃效果
+    self.titleSeg.backgroundColor = [UIColor clearColor];
+    self.titleSeg = [[UISegmentedControl alloc] init];
     [self.titleSeg insertSegmentWithTitle:@"全部文章" atIndex:0 animated:YES];
     [self.titleSeg insertSegmentWithTitle:@"热门文章" atIndex:1 animated:YES];
     [self.titleSeg insertSegmentWithTitle:@"精选文章" atIndex:2 animated:YES];
@@ -49,15 +39,25 @@
     [self.titleSeg addTarget:self action:@selector(segAction:) forControlEvents:UIControlEventValueChanged];
     self.titleSeg.selectedSegmentIndex = 1;
     
+    [self.titleSeg mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.equalTo(self.view.mas_safeAreaLayoutGuideTop);
+            make.left.right.equalTo(self.view);
+            make.height.mas_equalTo(50);
+    }];
+    
     CGFloat screenWidth = self.view.bounds.size.width;
-    CGFloat screenHeight = self.view.bounds.size.height;
-    self.scr = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 151, screenWidth, screenHeight - 50)];
+    self.scr = [[UIScrollView alloc] init];
     self.scr.pagingEnabled = YES;
     self.scr.delegate = self;
     self.scr.showsHorizontalScrollIndicator = NO;
-    self.scr.contentSize = CGSizeMake(screenWidth * 3, self.scr.bounds.size.height);
     self.scr.contentOffset = CGPointMake(screenWidth, 0);
     [self.view addSubview:self.scr];
+    [self.scr mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.equalTo(self.titleSeg.mas_bottom);
+            make.left.right.bottom.equalTo(self.view);
+    }];
+    [self.view layoutIfNeeded]; // 强制刷新
+    self.scr.contentSize = CGSizeMake(screenWidth * 3, self.scr.bounds.size.height);
     
     // 一定要把UITableView返回，不能只是把self.featuredView指针传给函数，在函数里赋值
     // 因为Objective-C 传参是值传递
