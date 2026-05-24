@@ -93,7 +93,7 @@
             make.top.equalTo(self.headerView);
             make.left.equalTo(self.headerView);
             make.bottom.equalTo(self.headerView);
-            make.width.mas_offset(self.headerView.bounds.size.height);
+            make.width.mas_offset(100);
     }];
     [name mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.equalTo(self.headerView).offset(15);

@@ -30,10 +30,10 @@
                                                       green:143.0/255.0
                                                        blue:203.0/255.0
                                                       alpha:1.0];
-//    LoginVC *login = [[LoginVC alloc] init];
-//    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:login];
-//    self.window.rootViewController = nav;
-//    [self.window makeKeyAndVisible];
+    LoginVC *login = [[LoginVC alloc] init];
+    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:login];
+    self.window.rootViewController = nav;
+    [self.window makeKeyAndVisible];
     
     // 试验
     UITabBarController *tabBarVC = [[UITabBarController alloc] init];

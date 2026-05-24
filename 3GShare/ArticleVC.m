@@ -49,6 +49,7 @@
     self.scr = [[UIScrollView alloc] init];
     self.scr.pagingEnabled = YES;
     self.scr.delegate = self;
+    self.scr.bounces = NO;
     self.scr.showsHorizontalScrollIndicator = NO;
     self.scr.contentOffset = CGPointMake(screenWidth, 0);
     [self.view addSubview:self.scr];

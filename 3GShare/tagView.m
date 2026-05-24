@@ -23,6 +23,14 @@
     }
     return self;
 }
+- (instancetype)initWithTags:(NSArray<NSString *> *)tags {
+    self = [super init];
+    if (self) {
+        self.tags = tags;
+        [self setupCollectionView];
+    }
+    return self;
+}
 - (void)setupHeaderViewWithTitle:(NSString *) title {
     UIView *view = [[UIView alloc] init];
     view.layer.cornerRadius = 5;
