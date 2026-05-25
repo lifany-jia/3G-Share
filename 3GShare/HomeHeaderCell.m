@@ -64,7 +64,7 @@
     self.imas = imas;
     self.page.numberOfPages = self.imas.count;
     self.hasSetup = NO;  // 标记需要重新创建
-    [self setNeedsLayout];   // 触发 layoutSubviews 告诉系统：我需要重新布局
+    [self layoutIfNeeded];   // 触发 layoutSubviews 告诉系统：我需要重新布局
 }
 // 约束会在此函数开始计算，这个时候self.contentView.bounds才会有值
 - (void)layoutSubviews {
@@ -75,6 +75,16 @@
         self.hasSetup = YES;
     }
 }
+- (void)prepareForReuse {
+       [super prepareForReuse];
+       self.hasSetup = NO;
+       self.imas = nil;
+       [self stopTime];
+       for (UIView *subView in self.scr.subviews) {
+           [subView removeFromSuperview];
+       }
+   }
+
 - (void)creatImages {
     CGFloat scrWidth = self.scr.bounds.size.width;
     CGFloat scrHeight = self.scr.bounds.size.height;
