@@ -32,6 +32,7 @@
     [super viewDidLoad];
     self.navigationItem.title = @"上传";
     self.view.backgroundColor = [UIColor groupTableViewBackgroundColor];
+    self.images = [NSMutableArray array];
     [self setupPostView];
     [self setupTagView];
     [self setupTextField];
@@ -68,6 +69,7 @@
     // 没有设置contentSize之前和普通UIView一样，不会显示
     self.photoScrollView.pagingEnabled = YES;
     self.photoScrollView.showsHorizontalScrollIndicator = NO;
+    self.photoScrollView.delegate = self;
     [self.postView addSubview:self.photoScrollView];
     [self.photoScrollView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.edges.equalTo(self.postView);
@@ -175,7 +177,7 @@
 #pragma mark - setupTagView
 - (void)setupTagView {
     UIView *divider = [[UIView alloc] init];
-    divider.backgroundColor = [UIColor blackColor];
+    divider.backgroundColor = [UIColor grayColor];
     divider.layer.cornerRadius = 10;
     [self.view addSubview:divider];
     [divider mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -239,6 +241,7 @@
         return attributes;
     };
     self.postButton = [UIButton buttonWithConfiguration:config primaryAction:nil];
+    [self.postButton addTarget:self action:@selector(postAction) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:self.postButton];
     [self.postButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(contentView.mas_bottom).offset(10);
@@ -337,6 +340,23 @@
     [self.postView bringSubviewToFront:self.badgeLabel];
     [self.postView bringSubviewToFront:self.page];
 }
+- (void)postAction {
+    NSString *name = self.nameText.text;
+    NSString *content = self.contentText.text;
+    if (name.length == 0 || content.length == 0) {
+        UIAlertController *alertCancel = [UIAlertController alertControllerWithTitle:@"提示" message:@"名称或内容不能为空！" preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil];
+        [alertCancel addAction:cancel];
+        [self presentViewController:alertCancel animated:YES completion:nil];
+        return;
+    }
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"提示" message:@"上传成功！" preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *confirm = [UIAlertAction actionWithTitle:@"确认" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        [self.navigationController popViewControllerAnimated:YES];
+    }];
+    [alert addAction:confirm];
+    [self presentViewController:alert animated:YES completion:nil];
+}
 #pragma mark - tableView
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return self.dropOptions.count;
@@ -352,6 +372,12 @@
     [self.dropButton setTitle:selected forState:UIControlStateNormal];
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     [self toggleDropList];
+}
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    CGFloat width = scrollView.bounds.size.width;
+    CGFloat x = scrollView.contentOffset.x;
+    NSInteger page = (NSInteger)((x / width) + 0.5);
+    self.page.currentPage = page;
 }
 /*
 #pragma mark - Navigation
