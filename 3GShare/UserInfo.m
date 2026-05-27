@@ -48,6 +48,18 @@
         user.sign = @"开心了就笑，不开心了就过会儿再笑";
         user.label = @"数媒/设计爱好者";
         user.email = @"186###3@qq.com";
+        user.info = @[
+        @[
+            @{@"title": @"我的上传", @"icon": @"square.and.arrow.up"},
+            @{@"title": @"我的消息", @"icon": @"bubble"},
+            @{@"title": @"我的喜欢", @"icon": @"heart.fill"},
+            @{@"title": @"院系通知", @"icon": @"graduationcap"}
+        ],
+        @[
+            @{@"title": @"设置", @"icon": @"gearshape"},
+            @{@"title": @"退出", @"icon": @"rectangle.portrait.and.arrow.right"},
+        ]
+        ];
     });
     return user;
 }

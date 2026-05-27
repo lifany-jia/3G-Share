@@ -15,6 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSString *avatar;
 @property (nonatomic, copy) NSString *sign;
 @property (nonatomic, copy) NSString *label;
+@property (nonatomic, copy) NSArray<NSArray<NSDictionary *> *> *info;
 
 // 本来打算用NSUserDefaults做持久化的，但是没有考虑到他不可以保存敏感信息密码这种，所以还是不做持久化了
 + (BOOL)registerWithName:(NSString *) name password:(NSString *) password email:(NSString *)email;
