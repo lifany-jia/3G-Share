@@ -7,6 +7,7 @@
 
 #import "DmVC.h"
 #import "ChatVC.h"
+#import "ChatModel.h"
 #import "FollowCell.h"
 @interface DmVC () <UITableViewDelegate, UITableViewDataSource>
 @property (nonatomic, strong) UITableView *tableView;
@@ -42,7 +43,24 @@
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    ChatVC *chat = [[ChatVC alloc] initWithTitle:self.model[indexPath.row][@"name"] ];
+    NSMutableArray *model = [NSMutableArray array];
+    if (indexPath.row == 0) {
+        [model addObject:[ChatModel modelWithContent:@"我是share小格" type:MessageTypeOther avatar:@"share小格"]];
+        [model addObject:[ChatModel modelWithContent:@"我是share小白" type:MessageTypeSelf avatar:@"avatar"]];
+        [model addObject:[ChatModel modelWithContent:@"你的作品我很喜欢！！！" type:MessageTypeOther avatar:@"share小格"]];
+    } else if (indexPath.row == 1) {
+        [model addObject:[ChatModel modelWithContent:@"我是share小宁" type:MessageTypeOther avatar:@"share小宁"]];
+        [model addObject:[ChatModel modelWithContent:@"你好可以问问你是怎么拍的吗？" type:MessageTypeOther avatar:@"share小宁"]];
+    } else if (indexPath.row == 2) {
+        [model addObject:[ChatModel modelWithContent:@"我是share小兰" type:MessageTypeOther avatar:@"share小兰"]];
+        [model addObject:[ChatModel modelWithContent:@"你的项链好漂亮" type:MessageTypeOther avatar:@"share小兰"]];
+        [model addObject:[ChatModel modelWithContent:@"可以给个链接吗" type:MessageTypeOther avatar:@"share小兰"]];
+    } else if (indexPath.row == 3) {
+        [model addObject:[ChatModel modelWithContent:@"快看某音给你分享的视频！！！！" type:MessageTypeSelf avatar:@"avatar"]];
+        [model addObject:[ChatModel modelWithContent:@"小白技术又精进了" type:MessageTypeOther avatar:@"share小汪"]];
+        [model addObject:[ChatModel modelWithContent:@"为你点赞！" type:MessageTypeOther avatar:@"share小汪"]];
+    }
+    ChatVC *chat = [[ChatVC alloc] initWithTitle:self.model[indexPath.row][@"name"] model:model];
     [self.navigationController pushViewController:chat animated:YES];
 }
 /*

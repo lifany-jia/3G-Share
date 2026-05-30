@@ -6,11 +6,11 @@
 //
 
 #import <UIKit/UIKit.h>
-
+#import "ChatModel.h"
 NS_ASSUME_NONNULL_BEGIN
 
 @interface ChatVC : UIViewController
-- (instancetype)initWithTitle:(NSString *) title ;
+- (instancetype)initWithTitle:(NSString *) title model:(NSMutableArray<ChatModel *> *) model;
 @end
 
 NS_ASSUME_NONNULL_END

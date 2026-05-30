@@ -6,7 +6,6 @@
 //
 
 #import "ChatVC.h"
-#import "ChatModel.h"
 #import "leftBubbleCell.h"
 #import "RightBubbleCell.h"
 #import <Masonry/Masonry.h>
@@ -18,14 +17,17 @@
 @property (nonatomic, strong) NSMutableArray<ChatModel *> *message;
 @property (nonatomic, strong) MASConstraint *inputBarBottom;
 @property (nonatomic, strong) NSString *nameOther;
-@property (nonatomic, assign) BOOL isSelf;
+//@property (nonatomic, assign) BOOL isSelf;
 @end
 
 @implementation ChatVC
-- (instancetype)initWithTitle:(NSString *)title {
+// nonull是指明确规定不可以传入nil，nullabel是指可以传入nil
+- (instancetype)initWithTitle:(NSString *)title model:(nonnull NSMutableArray<ChatModel *> *)model{
     self = [super init];
     if (self) {
         self.nameOther = title;
+        // 防止传入null
+        self.message = model ?: [NSMutableArray array];
     }
     return self;
 }
@@ -34,8 +36,7 @@
     self.view.backgroundColor = [UIColor colorWithWhite:0.95 alpha:1.0];
     self.navigationItem.title = self.nameOther;
     
-    self.message = [NSMutableArray array];
-    self.isSelf = YES;
+//    self.isSelf = YES;
     [self setupInputBar];
     [self setupTableView];
 }
@@ -115,12 +116,18 @@
     }
     MessageType type = arc4random_uniform(2) == 0 ? MessageTypeSelf : MessageTypeOther;
 //    MessageType type = _isSelf ? MessageTypeSelf : MessageTypeOther;
+//    self.isSelf = !self.isSelf;
     NSString *avatar = type == MessageTypeSelf ? @"avatar" : self.nameOther;
     ChatModel *model = [ChatModel modelWithContent:text type:type avatar:avatar];
-    self.isSelf = !self.isSelf;
     [self.message addObject:model];
     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:self.message.count - 1 inSection:0];
+    // 插入新的一行，不用reloadDate，因为这个会全部重建，让tableView闪一下
+    // P1:插入哪些行 P2:新消息在数组中的位置
     [self.tableView insertRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationBottom];
+    // P1：滚到哪一行 P2:这一行显示在哪里
+    // 注意这里的position是相对于tableView的，由于我给tableView添加了约束和inputBar绑在一起
+    // 所以在键盘弹起的时候inputBar上移的同时也上移了tableView的buttom
+    // 所以每次有新消息滚动的时候永远都会在键盘上面，不会在整个屏幕的底部
     [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionBottom animated:YES];
     self.inputField.text = @"";
 }
