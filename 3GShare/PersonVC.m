@@ -7,6 +7,10 @@
 
 #import "PersonVC.h"
 #import "UserInfo.h"
+#import "ArticleVC.h"
+#import "SetVC.h"
+#import "MessageVC.h"
+#import "LikeVC.h"
 #import "PersonInfoCell.h"
 #import <Masonry/Masonry.h>
 @interface PersonVC () <UITableViewDelegate, UITableViewDataSource>
@@ -25,7 +29,7 @@
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
     self.tableView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
-    self.tableView.separatorInset = UIEdgeInsetsMake(0, 45, 0, 10);
+    self.tableView.separatorInset = UIEdgeInsetsMake(0, 48, 0, 10);
     [self.tableView registerClass:[PersonInfoCell class] forCellReuseIdentifier:@"cell"];
     [self.view addSubview:self.tableView];
     [self setupHeaderViewWithUserInfo:self.user];
@@ -158,23 +162,33 @@
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     if (indexPath.section == 0) {
         if (indexPath.row == 0) {
-            
+            NSArray *segName = @[@"上传时间", @"推荐最多", @"分享最多"];
+            ArticleVC *article = [[ArticleVC alloc] initWithTitle:@"我的上传" segName:segName];
+            [self.navigationController pushViewController:article animated:YES];
         } else if (indexPath.row == 1) {
-            
+            MessageVC *message = [[MessageVC alloc] init];
+            [self.navigationController pushViewController:message animated:YES];
         } else if (indexPath.row == 2) {
-            
-        } else if (indexPath.row == 3) {
-            
+            LikeVC *like = [[LikeVC alloc] init];
+            [self.navigationController pushViewController:like animated:YES];
+        } else {
+            [self showAlert:@"目前没有新通知"];
         }
     } else if (indexPath.section == 1) {
         if (indexPath.row == 0) {
-            
-        } else if (indexPath.row == 1) {
-            
+            SetVC *set = [[SetVC alloc] init];
+            [self.navigationController pushViewController:set animated:YES];
+        } else {
+            [self showAlert:@"需求被驳回"];
         }
     }
 }
-
+- (void)showAlert:(NSString *) message {
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:nil message:message preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *confirm = [UIAlertAction actionWithTitle:@"确认" style:UIAlertActionStyleDefault handler:nil];
+    [alert addAction:confirm];
+    [self presentViewController:alert animated:YES completion:nil];
+}
 /*
 #pragma mark - Navigation
 

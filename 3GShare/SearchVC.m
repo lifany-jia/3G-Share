@@ -152,6 +152,9 @@
     [cell updateWithModel:self.model row:indexPath.row];
     return cell;
 }
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+}
 /*
 #pragma mark - Navigation
 

@@ -15,7 +15,7 @@
     dispatch_once(&onceToken, ^{
         model = [[TypeArtiModel alloc] init];
         model.featuredArticles = @[
-            [ArticleModel modelWithAuthorName:@"share小白" articleName:@"关于设计反馈的5件事" time:@"12小时前" tag:@"设计文章-原创-理论" likes:26 views:260 shares:4],
+            [ArticleModel modelWithAuthorName:@"share小白" articleName:@"关于设计反馈的5件事" time:@"12小时前" tag:@"设计文章-原创-理论" likes:27 views:260 shares:4],
             [ArticleModel modelWithAuthorName:@"share小王" articleName:@"用户设计PK战！脸书vs人人" time:@"1天前" tag:@"设计文章-原创-Web/Flash" likes:45 views:105 shares:20],
             [ArticleModel modelWithAuthorName:@"share小吕" articleName:@"字体故事" time:@"1天前" tag:@"设计文章-经验-设计观点" likes:145 views:347 shares:103],
             [ArticleModel modelWithAuthorName:@"share小蓝" articleName:@"5道零失败料理分享" time:@"1天前" tag:@"美食-经验" likes:108 views:567 shares:103],

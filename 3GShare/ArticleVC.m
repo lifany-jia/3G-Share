@@ -6,7 +6,6 @@
 //
 
 #import "ArticleVC.h"
-#import "ArticleModel.h"
 #import "HomeArticelCell.h"
 #import <Masonry/Masonry.h>
 @interface ArticleVC () <UITableViewDelegate, UITableViewDataSource, UIScrollViewDelegate>
@@ -16,25 +15,29 @@
 @property (nonatomic, strong) UIScrollView *scr;
 @property (nonatomic, strong) UISegmentedControl *titleSeg;
 @property (nonatomic, strong) TypeArtiModel *model;
+@property (nonatomic, copy) NSArray<NSString *> * segName;
+@property (nonatomic, copy) NSString *titleName;
 @end
 
 @implementation ArticleVC
-- (instancetype)init {
+- (instancetype)initWithTitle:(NSString *)title segName:(NSArray<NSString *> *)segName {
     self = [super init];
     if (self) {
         self.model = [TypeArtiModel defaultTypeArtiModel];
+        self.titleName = title;
+        self.segName = segName;
     }
     return self;
 }
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.navigationItem.title = @"文章";
+    self.navigationItem.title = self.titleName;
     // seg 背景透明，透出玻璃效果
     self.titleSeg.backgroundColor = [UIColor clearColor];
     self.titleSeg = [[UISegmentedControl alloc] init];
-    [self.titleSeg insertSegmentWithTitle:@"全部文章" atIndex:0 animated:YES];
-    [self.titleSeg insertSegmentWithTitle:@"热门文章" atIndex:1 animated:YES];
-    [self.titleSeg insertSegmentWithTitle:@"精选文章" atIndex:2 animated:YES];
+    [self.titleSeg insertSegmentWithTitle:self.segName[0] atIndex:0 animated:YES];
+    [self.titleSeg insertSegmentWithTitle:self.segName[1] atIndex:1 animated:YES];
+    [self.titleSeg insertSegmentWithTitle:self.segName[2] atIndex:2 animated:YES];
     [self.view addSubview:self.titleSeg];
     [self.titleSeg addTarget:self action:@selector(segAction:) forControlEvents:UIControlEventValueChanged];
     self.titleSeg.selectedSegmentIndex = 1;

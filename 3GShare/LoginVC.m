@@ -241,7 +241,8 @@
     search.tabBarItem = [[UITabBarItem alloc] initWithTitle:nil image:[UIImage systemImageNamed:@"magnifyingglass"] selectedImage:[UIImage systemImageNamed:@"magnifyingglass.circle.fill"]];
     UINavigationController *searchNav = [[UINavigationController alloc] initWithRootViewController:search];
     
-    ArticleVC *article = [[ArticleVC alloc] init];
+    NSArray *segName = @[@"全部文章", @"热门文章", @"精选文章"];
+    ArticleVC *article = [[ArticleVC alloc] initWithTitle:@"文章" segName:segName];
     article.tabBarItem = [[UITabBarItem alloc] initWithTitle:nil image:[UIImage systemImageNamed:@"square.and.pencil"] selectedImage:[UIImage systemImageNamed:@"pencil"]];
     UINavigationController *articleNav = [[UINavigationController alloc] initWithRootViewController:article];
     
