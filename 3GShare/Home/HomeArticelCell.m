@@ -16,7 +16,7 @@
 @property (nonatomic, strong) UIButton *likes;
 @property (nonatomic, strong) UIButton *views;
 @property (nonatomic, strong) UIButton *shares;
-@property (nonatomic, assign) NSInteger likeCount;
+@property (nonatomic, strong) ArticleModel *model;
 @end
 @implementation HomeArticelCell
 
@@ -139,13 +139,15 @@
     
 }
 - (void)updateWithModel:(NSArray<ArticleModel *> *) article row:(NSInteger)row{
-    self.imaV.image = [UIImage imageNamed:article[row].articleName];
-    self.articleName.text = article[row].articleName;
-    self.authorName.text = article[row].authorName;
-    self.taG.text = article[row].tag;
-    self.time.text = article[row].time;
-    self.likeCount = (long)article[row].likes;
-    [self.likes setTitle:[NSString stringWithFormat:@"%ld", self.likeCount]
+    self.model = article[row];
+    self.imaV.image = [UIImage imageNamed:self.model.articleName];
+    self.articleName.text = self.model.articleName;
+    self.authorName.text = self.model.authorName;
+    self.taG.text = self.model.tag;
+    self.time.text = self.model.time;
+    // 通过model更新按钮的选择状态
+    self.likes.selected = self.model.liked;
+    [self.likes setTitle:[NSString stringWithFormat:@"%ld", (long)self.model.likes]
                forState:UIControlStateNormal];
     [self.likes setTitleColor:[UIColor colorWithRed:53.0 / 255.0 green:143.0 / 255.0 blue:203.0 / 255.0 alpha:1.0] forState:UIControlStateNormal];
     self.likes.titleLabel.font = [UIFont systemFontOfSize:10];
@@ -160,15 +162,20 @@
     self.shares.titleLabel.font = [UIFont systemFontOfSize:10];
 }
 - (void)likeSelected {
-    self.likes.selected = !self.likes.selected;
-    if (self.likes.selected) {
-        self.likeCount++;
-        [self.likes setTitle:[NSString stringWithFormat:@"%ld", self.likeCount]
+    // 直接修改唯一model之后，发通知让所有该文章都修改点赞状态
+    self.model.liked = !self.model.liked;
+    if (self.model.liked) {
+        self.model.likes++;
+        [self.likes setTitle:[NSString stringWithFormat:@"%ld", self.model.likes]
                    forState:UIControlStateNormal];
     } else {
-        self.likeCount--;
-        [self.likes setTitle:[NSString stringWithFormat:@"%ld", self.likeCount]
+        self.model.likes--;
+        [self.likes setTitle:[NSString stringWithFormat:@"%ld", self.model.likes]
                    forState:UIControlStateNormal];
     }
+    self.likes.selected = self.model.liked;
+    [self.likes setTitle:[NSString stringWithFormat:@"%ld", self.model.likes]
+                      forState:UIControlStateNormal];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"ArticleLikedDidChange" object:self.model];
 }
 @end

@@ -16,6 +16,7 @@
 @property (nonatomic, strong) TypeArtiModel *model;
 @property (nonatomic, strong) UserInfo *user;
 @property (nonatomic, strong) UIButton *like;
+@property (nonatomic, strong) ArticleModel *article;
 @end
 
 @implementation HolidayVC
@@ -31,6 +32,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.navigationItem.title = @"假日";
+    self.article = self.model.userArticles[0];
     
 #pragma mark - headerView
     self.headerView = [[UIView alloc] init];
@@ -63,6 +65,7 @@
     [self.headerView addSubview:time];
     
     self.like = [UIButton buttonWithType:UIButtonTypeCustom];
+    self.like.selected = self.article.liked;
     [self.like setImage:[UIImage systemImageNamed:@"heart" ]forState:UIControlStateNormal];
     [self.like setImage:[UIImage systemImageNamed:@"heart.fill" ]forState:UIControlStateSelected];
     [self.like setTitle:[NSString stringWithFormat:@"%ld", (long)self.model.userArticles[0].likes] forState:UIControlStateNormal];
@@ -157,6 +160,7 @@
     self.tableView.separatorStyle = NO;
     self.tableView.estimatedRowHeight = 200;
     [self.tableView registerClass:[HolidayPhotoCell class] forCellReuseIdentifier:@"cell"];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(likeChange:) name:@"ArticleLikedDidChange" object:nil];
 }
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     // 因为这里的self.model.holiday是一个字典，字典的value是id类型
@@ -173,7 +177,19 @@
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 - (void)likeAction {
-    self.like.selected = !self.like.selected;
+    self.article.liked = !self.article.liked;
+    if (self.article.liked) {
+        self.article.likes++;
+    } else {
+        self.article.likes--;
+    }
+    self.like.selected = self.article.liked;
+    [self.like setTitle:[NSString stringWithFormat:@"%ld", self.article.likes]
+                     forState:UIControlStateNormal];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"ArticleLikedDidChange" object:self.article];
+}
+- (void)likeChange:(NSNotification *) notification {
+    self.like.selected = self.article.liked;
 }
 /*
 #pragma mark - Navigation

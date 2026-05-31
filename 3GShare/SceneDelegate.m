@@ -34,8 +34,8 @@
     UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:login];
     self.window.rootViewController = nav;
     [self.window makeKeyAndVisible];
-    
-    // 试验
+
+//    // 试验
     UITabBarController *tabBarVC = [[UITabBarController alloc] init];
     
     HomeVC *home = [[HomeVC alloc] init];

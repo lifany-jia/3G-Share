@@ -84,10 +84,8 @@
     button.selected = !button.selected;
     if (button.selected) {
         button.layer.borderColor = [UIColor lightGrayColor].CGColor;
-        button.backgroundColor = [UIColor colorWithWhite:0.95 alpha:1.0];
     } else {
         button.layer.borderColor = [UIColor colorWithRed:53.0 / 255.0 green:143.0 / 255.0 blue:203.0 / 255.0 alpha:1.0].CGColor;
-        button.backgroundColor = [UIColor whiteColor];
     }
     // 通知 VC 状态改变了（用 block 回调）
     if (self.followBlock) {
@@ -98,12 +96,11 @@
 - (void)updateWithFollowModel:(NSString *)model isSelectedd:(BOOL)isSelected {
     self.name.text = model;
     self.avatar.image = [UIImage imageNamed:model];
+    self.followButton.selected = isSelected;
     if (isSelected) {
         self.followButton.layer.borderColor = [UIColor lightGrayColor].CGColor;
-        self.followButton.backgroundColor = [UIColor colorWithWhite:0.95 alpha:1.0];
     } else {
         self.followButton.layer.borderColor = [UIColor colorWithRed:53.0 / 255.0 green:143.0 / 255.0 blue:203.0 / 255.0 alpha:1.0].CGColor;
-        self.followButton.backgroundColor = [UIColor whiteColor];
     }
 }
 #pragma mark - setupDmCell

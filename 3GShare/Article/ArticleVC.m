@@ -81,6 +81,8 @@
     [self.scr addSubview:self.allArticleView];
     [self.scr addSubview:self.featuredView];
     [self.scr addSubview:self.trendingView];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(articleDidChange:) name:@"ArticleLikedDidChange" object:nil];
 }
 - (UITableView *)setupTableView {
     UITableView *tableView = [[UITableView alloc] init];
@@ -135,6 +137,36 @@
     NSInteger index = (NSInteger)(realPage + 0.5);
     index = MAX(0, MIN(index, 2));
     self.titleSeg.selectedSegmentIndex = index;
+}
+//- (void)viewWillAppear:(BOOL)animated {
+//    [super viewWillAppear:animated];
+//    // 如果viewDidLoad已经调用过，该页面不是第一次展示而是离开该页面在其他页面修改数据，再次回到该页面的时候不会重新复用cell
+//    // 一次就不会updateWithModel使用修改后的model，所以这个时候传值就没有效果，因为viewDidLoad只加载一次
+//    // 所以只能reloadData
+//    // 这里通知里的reloadData没有用是因为因为 NSNotificationCenter 的通知是即时广播，不是消息队列
+//    // postNotificationName 发出去的那一刻，只有当前已经 addObserver 的对象能收到
+//    // 没有注册的、已经移除的、还没创建的页面，都收不到。系统不会帮你保存这条通知，等它以后出现再补发
+//    // 这里在viewWillAppear:注册通知，viewWillDisappear:移除监听就是会收不到，dealloc移除
+//    // ‼️所以正确应该在viewDidLoad注册，dealloc移除
+//    // 我会想到在Will里操作是登录注册页键盘通知的教训，但是还是用错了
+//    [self.featuredView reloadData];
+//    [self.trendingView reloadData];
+//    [self.allArticleView reloadData];
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(articleDidChange:) name:@"ArticleLikedDidChange" object:nil];
+//}
+//- (void)viewWillDisappear:(BOOL)animated {
+//    [super viewWillDisappear:animated];
+//    [[NSNotificationCenter defaultCenter] removeObserver:self];
+//}
+- (void)articleDidChange:(NSNotification *) notification {
+    [self.featuredView reloadData];
+    [self.trendingView reloadData];
+    [self.allArticleView reloadData];
+}
+
+
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 /*
 #pragma mark - Navigation

@@ -131,16 +131,19 @@
         view2.hidden = NO;
         view3.hidden = NO;
         self.tableView.hidden = YES;
+        self.tabBarController.tabBar.hidden = NO;
     } else if (text.length != 0 && [text isEqualToString:@"大白"]) {
         view1.hidden = YES;
         view2.hidden = YES;
         view3.hidden = YES;
         self.tableView.hidden = NO;
+        self.tabBarController.tabBar.hidden = YES;
     } else {
         view1.hidden = YES;
         view2.hidden = YES;
         view3.hidden = YES;
         self.tableView.hidden = YES;
+        self.tabBarController.tabBar.hidden = YES;
     }
 }
 

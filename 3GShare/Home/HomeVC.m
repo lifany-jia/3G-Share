@@ -39,6 +39,8 @@
     [self.tableView registerClass:[HomeArticelCell class] forCellReuseIdentifier:@"cell"];
     [self.tableView registerClass:[HomeHeaderCell class] forCellReuseIdentifier:@"headerCell"];
     [self.view addSubview:self.tableView];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(articleDidChange:) name:@"ArticleLikedDidChange" object:nil];
 }
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     return 2;
@@ -92,7 +94,13 @@
     }
 }
 
+- (void)articleDidChange:(NSNotification *) notification {
+    [self.tableView reloadData];
+}
 
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
 /*
 #pragma mark - Navigation
 

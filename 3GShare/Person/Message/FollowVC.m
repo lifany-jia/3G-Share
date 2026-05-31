@@ -29,6 +29,7 @@
     self.model = @[
         @"share小格", @"share小宁", @"share小黑", @"shareLily", @"share小兰", @"share小汪"
     ];
+    self.isSelected = [NSMutableArray array];
     for (int i = 0; i < self.model.count; i++) {
         [self.isSelected addObject:@(NO)];
     }
@@ -47,6 +48,14 @@
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
+}
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    self.tabBarController.tabBar.hidden = YES;
+}
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    self.tabBarController.tabBar.hidden = NO;
 }
 /*
 #pragma mark - Navigation

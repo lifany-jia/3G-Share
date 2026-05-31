@@ -305,14 +305,19 @@
     }
     dispatch_group_t group = dispatch_group_create();
     NSMutableArray *newImages = [NSMutableArray array];
-    for (PHPickerResult *result in results) {
+    for (int i = 0; i < results.count; i++) {
+        [newImages addObject:[NSNull null]]; // 先占位
+    }
+    for (int i = 0; i < results.count; i++) {
         dispatch_group_enter(group);
-        [result.itemProvider loadObjectOfClass:[UIImage class] completionHandler:^(UIImage *image, NSError *error) {
+        NSInteger index = i; // 保存索引，保证图片放到对应位置
+        [results[i].itemProvider loadObjectOfClass:[UIImage class] completionHandler:^(UIImage *image, NSError *error) {
+            
             if (image) {
-                @synchronized (newImages) {
-                    [newImages addObject:image];
-                }
+                // 用索引赋值，不同线程写不同位置，不会冲突
+                newImages[index] = image;
             }
+            
             dispatch_group_leave(group);
         }];
     }
@@ -378,6 +383,14 @@
     CGFloat x = scrollView.contentOffset.x;
     NSInteger page = (NSInteger)((x / width) + 0.5);
     self.page.currentPage = page;
+}
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    self.tabBarController.tabBar.hidden = YES;
+}
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    self.tabBarController.tabBar.hidden = NO;
 }
 /*
 #pragma mark - Navigation

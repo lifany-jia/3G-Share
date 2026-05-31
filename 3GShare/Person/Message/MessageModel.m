@@ -15,12 +15,17 @@
     return model;
 }
 + (NSMutableArray<MessageModel *> *)defaultModel {
-    return @[
-        [MessageModel modelWithTitle:@"评论"    number:0],
-        [MessageModel modelWithTitle:@"推荐我的" number:0],
-        [MessageModel modelWithTitle:@"新关注的" number:6],
-        [MessageModel modelWithTitle:@"私信"    number:4],
-        [MessageModel modelWithTitle:@"活动通知" number:0]
-    ].mutableCopy;
+    static NSMutableArray<MessageModel *> *message = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        message = @[
+            [MessageModel modelWithTitle:@"评论"    number:0],
+            [MessageModel modelWithTitle:@"推荐我的" number:0],
+            [MessageModel modelWithTitle:@"新关注的" number:6],
+            [MessageModel modelWithTitle:@"私信"    number:4],
+            [MessageModel modelWithTitle:@"活动通知" number:0]
+        ].mutableCopy;
+    });
+    return message;
 }
 @end

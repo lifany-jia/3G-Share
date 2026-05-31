@@ -24,6 +24,7 @@
     self.tableView.dataSource = self;
     [self.view addSubview:self.tableView];
     [self.tableView registerClass:[HomeArticelCell class] forCellReuseIdentifier:@"cell"];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(articleDidChange:) name:@"ArticleLikedDidChange" object:nil];
 }
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return self.model.userArticles.count;
@@ -32,6 +33,21 @@
     HomeArticelCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell" forIndexPath:indexPath];
     [cell updateWithModel:self.model.userArticles row:indexPath.row];
     return cell;
+}
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    self.tabBarController.tabBar.hidden = YES;
+}
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    self.tabBarController.tabBar.hidden = NO;
+}
+
+- (void)articleDidChange:(NSNotification *) notification {
+    [self.tableView reloadData];
+}
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 /*
 #pragma mark - Navigation
