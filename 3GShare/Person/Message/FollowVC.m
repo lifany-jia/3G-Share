@@ -39,7 +39,7 @@
 }
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     FollowCell *cell = [tableView dequeueReusableCellWithIdentifier:@"followCell" forIndexPath:indexPath];
-    BOOL isSelect = self.isSelected[indexPath.row];
+    BOOL isSelect = [self.isSelected[indexPath.row] boolValue];
     [cell updateWithFollowModel:self.model[indexPath.row] isSelectedd:isSelect];
     cell.followBlock = ^(BOOL isFollowed){
         self.isSelected[indexPath.row] = @(isFollowed);

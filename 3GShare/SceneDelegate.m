@@ -36,34 +36,34 @@
     [self.window makeKeyAndVisible];
 
 //    // 试验
-    UITabBarController *tabBarVC = [[UITabBarController alloc] init];
-    
-    HomeVC *home = [[HomeVC alloc] init];
-    home.tabBarItem = [[UITabBarItem alloc] initWithTitle:nil image:[UIImage systemImageNamed:@"house"] selectedImage:[UIImage systemImageNamed:@"house.fill"]];
-    UINavigationController *homeNav = [[UINavigationController alloc] initWithRootViewController:home];
-    
-    SearchVC *search = [[SearchVC alloc] init];
-    search.tabBarItem = [[UITabBarItem alloc] initWithTitle:nil image:[UIImage systemImageNamed:@"magnifyingglass"] selectedImage:[UIImage systemImageNamed:@"magnifyingglass.circle.fill"]];
-    UINavigationController *searchNav = [[UINavigationController alloc] initWithRootViewController:search];
-    
-    NSArray *segName = @[@"全部文章", @"热门文章", @"精选文章"];
-    ArticleVC *article = [[ArticleVC alloc] initWithTitle:@"文章" segName:segName];
-    article.tabBarItem = [[UITabBarItem alloc] initWithTitle:nil image:[UIImage systemImageNamed:@"square.and.pencil"] selectedImage:[UIImage systemImageNamed:@"pencil"]];
-    UINavigationController *articleNav = [[UINavigationController alloc] initWithRootViewController:article];
-    
-    TaskVC *task = [[TaskVC alloc] init];
-    task.tabBarItem = [[UITabBarItem alloc] initWithTitle:nil image:[UIImage systemImageNamed:@"trophy"] selectedImage:[UIImage systemImageNamed:@"trophy.fill"]];
-    UINavigationController *taskNav = [[UINavigationController alloc] initWithRootViewController:task];
-    
-    PersonVC *person = [[PersonVC alloc] init];
-    person.tabBarItem = [[UITabBarItem alloc] initWithTitle:nil image:[UIImage systemImageNamed:@"person.crop.circle"] selectedImage:[UIImage systemImageNamed:@"person.circle.fill"]];
-    UINavigationController *personNav = [[UINavigationController alloc] initWithRootViewController:person];
-    tabBarVC.viewControllers = @[homeNav, searchNav, articleNav, taskNav, personNav];
-    
-
-    self.window.rootViewController = tabBarVC;
-    [self.window makeKeyAndVisible];
-    
+//    UITabBarController *tabBarVC = [[UITabBarController alloc] init];
+//    
+//    HomeVC *home = [[HomeVC alloc] init];
+//    home.tabBarItem = [[UITabBarItem alloc] initWithTitle:nil image:[UIImage systemImageNamed:@"house"] selectedImage:[UIImage systemImageNamed:@"house.fill"]];
+//    UINavigationController *homeNav = [[UINavigationController alloc] initWithRootViewController:home];
+//    
+//    SearchVC *search = [[SearchVC alloc] init];
+//    search.tabBarItem = [[UITabBarItem alloc] initWithTitle:nil image:[UIImage systemImageNamed:@"magnifyingglass"] selectedImage:[UIImage systemImageNamed:@"magnifyingglass.circle.fill"]];
+//    UINavigationController *searchNav = [[UINavigationController alloc] initWithRootViewController:search];
+//    
+//    NSArray *segName = @[@"全部文章", @"热门文章", @"精选文章"];
+//    ArticleVC *article = [[ArticleVC alloc] initWithTitle:@"文章" segName:segName];
+//    article.tabBarItem = [[UITabBarItem alloc] initWithTitle:nil image:[UIImage systemImageNamed:@"square.and.pencil"] selectedImage:[UIImage systemImageNamed:@"pencil"]];
+//    UINavigationController *articleNav = [[UINavigationController alloc] initWithRootViewController:article];
+//    
+//    TaskVC *task = [[TaskVC alloc] init];
+//    task.tabBarItem = [[UITabBarItem alloc] initWithTitle:nil image:[UIImage systemImageNamed:@"trophy"] selectedImage:[UIImage systemImageNamed:@"trophy.fill"]];
+//    UINavigationController *taskNav = [[UINavigationController alloc] initWithRootViewController:task];
+//    
+//    PersonVC *person = [[PersonVC alloc] init];
+//    person.tabBarItem = [[UITabBarItem alloc] initWithTitle:nil image:[UIImage systemImageNamed:@"person.crop.circle"] selectedImage:[UIImage systemImageNamed:@"person.circle.fill"]];
+//    UINavigationController *personNav = [[UINavigationController alloc] initWithRootViewController:person];
+//    tabBarVC.viewControllers = @[homeNav, searchNav, articleNav, taskNav, personNav];
+//    
+//
+//    self.window.rootViewController = tabBarVC;
+//    [self.window makeKeyAndVisible];
+//    
 }
 
 
