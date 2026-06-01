@@ -116,7 +116,9 @@
 - (void)switchPage:(UIScrollView *)scr {
     CGFloat page = scr.contentOffset.x / self.scr.bounds.size.width;
     if (page == 0) {
-        [scr setContentOffset:CGPointMake((self.imas.count - 1)* self.scr.bounds.size.width, 0) animated:NO];
+        // 头部哑页是"真·最后一张"的副本，要无痕跳回它的真实位置。
+        // 真实图片占据索引 1 ~ imas.count，所以"真·最后一张"在索引 imas.count，而不是 imas.count - 1。
+        [scr setContentOffset:CGPointMake(self.imas.count * self.scr.bounds.size.width, 0) animated:NO];
         self.page.currentPage = self.imas.count - 1;
     } else if (page == self.imas.count + 1) {
         [scr setContentOffset:CGPointMake(self.scr.bounds.size.width, 0) animated:NO];
