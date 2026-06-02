@@ -111,7 +111,7 @@
             make.top.equalTo(self.time.mas_bottom).offset(12);
             make.left.equalTo(self.articleName);
             make.height.mas_equalTo(18);
-            make.width.mas_equalTo(40);
+            make.width.mas_equalTo(45);
             make.bottom.equalTo(containerView).offset(-10);
     }];
     

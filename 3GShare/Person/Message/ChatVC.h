@@ -10,6 +10,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface ChatVC : UIViewController
+@property (nonatomic, copy) void(^modifyLastMessage)(NSString *message);
 - (instancetype)initWithTitle:(NSString *) title model:(NSMutableArray<ChatModel *> *) model;
 @end
 

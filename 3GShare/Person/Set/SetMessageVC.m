@@ -6,6 +6,7 @@
 //
 
 #import "SetMessageVC.h"
+#import "MessageModel.h"
 #import <Masonry/Masonry.h>
 @interface SetMessageVC () <UITableViewDelegate, UITableViewDataSource>
 @property (nonatomic, strong) UITableView *tableView;
@@ -23,10 +24,7 @@
         @"接受新消息通知", @"通知显示栏", @"声音", @"振动", @"关注更新"
     ];
     
-    self.selectedStatues = [NSMutableArray array];
-    for (int i = 0; i < self.name.count; i++) {
-        [self.selectedStatues addObject:@(NO)];
-    }
+    self.selectedStatues = [MessageModel messageSettingStates];
     
     self.tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStyleInsetGrouped];
     self.tableView.delegate = self;

@@ -35,6 +35,8 @@
     [self.view addSubview:shareLabel];
     
     self.emailView = [[TextFieldView alloc] initWithIconName:@"envelope" placeHold:@"请输入邮箱地址"];
+    self.emailView.textField.keyboardType = UIKeyboardTypeEmailAddress;
+    self.emailView.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
     [self.view addSubview:self.emailView];
     [self.emailView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(shareLogo).offset(250);
@@ -44,6 +46,7 @@
     }];
     
     self.accountView = [[TextFieldView alloc] initWithIconName:@"person" placeHold:@"请输入账号"];
+    self.accountView.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
     [self.view addSubview:self.accountView];
     [self.accountView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.emailView.mas_bottom).offset(15);
@@ -53,6 +56,7 @@
     }];
     
     self.cipherView = [[TextFieldView alloc] initWithIconName:@"lock" placeHold:@"请输入密码"];
+    self.cipherView.textField.secureTextEntry = YES;
     [self.view addSubview:self.cipherView];
     [self.cipherView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.equalTo(self.view);
@@ -137,27 +141,50 @@
     }];
 }
 - (void)registerAction {
-    NSString *name = self.accountView.textField.text;
-    NSString *email = self.emailView.textField.text;
+    // 从输入框里取出用户名和邮箱，并去掉前后的空格、换行
+    // [NSCharacterSet whitespaceAndNewlineCharacterSet]表示字符集和，里面包括空格，tab，\n，\r
+    NSString *name = [self.accountView.textField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    NSString *email = [self.emailView.textField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
     NSString *password = self.cipherView.textField.text;
     if (name.length == 0 || email.length == 0 || password.length == 0) {
-        UIAlertController *alert1 = [UIAlertController alertControllerWithTitle:nil message:@"不能为空！" preferredStyle:UIAlertControllerStyleAlert];
-        UIAlertAction *confirm1 = [UIAlertAction actionWithTitle:@"确认" style:UIAlertActionStyleDefault handler:nil];
-        [alert1 addAction:confirm1];
-        [self presentViewController:alert1 animated:YES completion:nil];
+        [self showAlertWithMessage:@"邮箱、账号或密码不能为空！"];
+        return;
+    }
+    if (name.length < 3 || name.length > 16) {
+        [self showAlertWithMessage:@"账号长度需为3-16位！"];
+        return;
+    }
+    if (![self isValidEmail:email]) {
+        [self showAlertWithMessage:@"请输入正确的邮箱格式！"];
+        return;
+    }
+    if (password.length < 6 || password.length > 20) {
+        [self showAlertWithMessage:@"密码长度需为6-20位！"];
+        return;
     }
     if ([UserInfo registerWithName:name password:password email:email]) {
         // 安全检查，不然协议其实没有实现对应的方法会直接奔溃
         if ([self.delegate respondsToSelector:@selector(memorizeWithAccount:)]) {
             [self.delegate memorizeWithAccount:name];
         }
+        [self.navigationController popViewControllerAnimated:YES];
     } else {
-        UIAlertController *alert = [UIAlertController alertControllerWithTitle:nil message:@"账户已存在！" preferredStyle:UIAlertControllerStyleAlert];
-        UIAlertAction *confirm = [UIAlertAction actionWithTitle:@"确认" style:UIAlertActionStyleDefault handler:nil];
-        [alert addAction:confirm];
-        [self presentViewController:alert animated:YES completion:nil];
+        [self showAlertWithMessage:@"账户已存在！"];
     }
-    [self.navigationController popViewControllerAnimated:YES];
+}
+- (BOOL)isValidEmail:(NSString *)email {
+    // 正则表达式，描述邮箱格式
+    NSString *emailRegex = @"[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}";
+    // 创建一个判断器，判断对象本身是否符合 emailRegex 这个正则表达式
+    NSPredicate *emailPredicate = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", emailRegex];
+    // 把 email 交给 emailPredicate 这个判断器作为 SELF，让它判断是否符合规则
+    return [emailPredicate evaluateWithObject:email];
+}
+- (void)showAlertWithMessage:(NSString *)message {
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:nil message:message preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *confirm = [UIAlertAction actionWithTitle:@"确认" style:UIAlertActionStyleDefault handler:nil];
+    [alert addAction:confirm];
+    [self presentViewController:alert animated:YES completion:nil];
 }
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];

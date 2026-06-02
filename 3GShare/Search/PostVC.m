@@ -10,7 +10,7 @@
 #import <PhotosUI/PhotosUI.h>
 #import <Masonry/Masonry.h>
 
-@interface PostVC () <UITableViewDelegate, UITableViewDataSource, PHPickerViewControllerDelegate, UIScrollViewDelegate>
+@interface PostVC () <UITableViewDelegate, UITableViewDataSource, PHPickerViewControllerDelegate, UIScrollViewDelegate, UITextFieldDelegate>
 @property (nonatomic, strong) UIView *postView;
 @property (nonatomic, strong) UIButton *dropButton;
 @property (nonatomic, strong) UIButton *postButton;
@@ -209,11 +209,15 @@
             make.height.mas_equalTo(30);
     }];
     self.nameText = [[UITextField alloc] init];
-    self.nameText.placeholder = @"作品名称";
+    self.nameText.placeholder = @"作品名称（字数限制11）";
+    // 设置最长字数限制
+    self.nameText.delegate = self;
     [self.view addSubview:self.nameText];
     [self.nameText mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.centerY.equalTo(nameView);
-            make.left.equalTo(nameView).offset(15);
+        make.centerY.equalTo(nameView);
+        make.left.equalTo(nameView).offset(15);
+        make.top.equalTo(nameView).offset(5);
+        make.bottom.equalTo(nameView).offset(-5);
     }];
     
     UIView *contentView = [[UIView alloc] init];
@@ -228,8 +232,10 @@
     self.contentText.placeholder = @"请添加作品说明/文章内容......";
     [self.view addSubview:self.contentText];
     [self.contentText mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.equalTo(contentView).offset(10);
-            make.left.equalTo(contentView).offset(15);
+        make.top.equalTo(contentView).offset(10);
+        make.left.equalTo(contentView).offset(15);
+//        make.top.equalTo(contentView).offset(5);
+//        make.bottom.equalTo(contentView).offset(-5);
     }];
     
     UIButtonConfiguration *config = [UIButtonConfiguration filledButtonConfiguration];
@@ -268,6 +274,16 @@
     }];
     
 }
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
+    NSInteger maxLength = 11;
+    // 取出旧文字并且防止nil
+    NSString *currentText = textField.text ?: @"";
+    // 根据用户这次的操作，模拟出修改后的新文字
+    // 因为这个函数是键盘每输入一次调用一次，所以就会有加入已经有11位字，但是这次新打开键盘又输入1个字这算新的一次没有超过11的字数限制，他就会仍然允许操作
+    // 所以要获得当前textField 最终的string，而不是只看这次键盘输入字数
+    NSString *newText = [currentText stringByReplacingCharactersInRange:range withString:string];
+    return newText.length <= maxLength;
+}
 #pragma mark - action
 - (void)banDownLoadAction:(UIButton *)but {
     but.selected = !but.selected;
@@ -276,6 +292,7 @@
     self.isExpand = !self.isExpand;
     CGFloat height = self.isExpand ? 30.0 * self.dropOptions.count : 0;
     if (self.isExpand) {
+        // 最上层
             [self.view bringSubviewToFront:self.dropList];
         }
     self.contentHeight.mas_equalTo(height);
@@ -291,6 +308,8 @@
     [self.view endEditing:YES];
 }
 - (void)selectPhoto {
+    // 清空上一次的图片选择
+    [self.images removeAllObjects];
     PHPickerConfiguration *config = [[PHPickerConfiguration alloc] init];
     config.filter = [PHPickerFilter imagesFilter];
     config.selectionLimit = 9;
@@ -387,10 +406,28 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     self.tabBarController.tabBar.hidden = YES;
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
 }
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     self.tabBarController.tabBar.hidden = NO;
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [self.view endEditing:YES];
+}
+- (void)keyboardWillShow:(NSNotification *)notification {
+    CGRect keyboardFrame = [notification.userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue];
+    CGFloat keyboardHeight = keyboardFrame.size.height;
+    CGFloat duration = [notification.userInfo[UIKeyboardAnimationDurationUserInfoKey] doubleValue];
+    [UIView animateWithDuration:duration animations:^{
+            self.view.transform = CGAffineTransformMakeTranslation(0, -keyboardHeight / 2);
+    }];
+}
+- (void)keyboardWillHide:(NSNotification *)notification {
+    CGFloat duration = [notification.userInfo[UIKeyboardAnimationDurationUserInfoKey] doubleValue];
+    [UIView animateWithDuration:duration animations:^{
+            self.view.transform = CGAffineTransformIdentity;
+    }];
 }
 /*
 #pragma mark - Navigation

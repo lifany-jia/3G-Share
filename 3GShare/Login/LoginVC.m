@@ -51,6 +51,8 @@
     [self.view addSubview:shareLabel];
     
     self.accountView = [[TextFieldView alloc] initWithIconName:@"person" placeHold:@"请输入账号"];
+    // 不自动大写
+    self.accountView.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
     [self.view addSubview:self.accountView];
     [self.accountView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(shareLogo).offset(250);

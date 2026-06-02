@@ -7,6 +7,7 @@
 
 #import "FollowVC.h"
 #import "FollowCell.h"
+#import "MessageModel.h"
 @interface FollowVC () <UITableViewDelegate, UITableViewDataSource>
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) NSArray<NSString *> *model;
@@ -29,10 +30,7 @@
     self.model = @[
         @"share小格", @"share小宁", @"share小黑", @"shareLily", @"share小兰", @"share小汪"
     ];
-    self.isSelected = [NSMutableArray array];
-    for (int i = 0; i < self.model.count; i++) {
-        [self.isSelected addObject:@(NO)];
-    }
+    self.isSelected = [MessageModel followStates];
 }
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return self.model.count;

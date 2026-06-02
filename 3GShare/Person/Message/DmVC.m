@@ -7,11 +7,11 @@
 
 #import "DmVC.h"
 #import "ChatVC.h"
-#import "ChatModel.h"
 #import "FollowCell.h"
+#import "MessageModel.h"
 @interface DmVC () <UITableViewDelegate, UITableViewDataSource>
 @property (nonatomic, strong) UITableView *tableView;
-@property (nonatomic, strong) NSArray<NSDictionary *> *model;
+@property (nonatomic, strong) NSMutableArray<NSMutableDictionary *> *model;
 @end
 
 @implementation DmVC
@@ -26,12 +26,7 @@
     [self.tableView registerClass:[FollowCell class] forCellReuseIdentifier:@"dmCell"];
     [self.view addSubview:self.tableView];
     
-    self.model = @[
-        @{@"name" : @"share小格", @"content" : @"你的作品我很喜欢！！！", @"time" : @"5月28日 16:04"},
-        @{@"name" : @"share小宁", @"content" : @"你好可以问问你是怎么拍的吗？", @"time" : @"5月28日 09:45"},
-        @{@"name" : @"share小兰", @"content" : @"可以给个链接吗", @"time" : @"5月27日 23:17"},
-        @{@"name" : @"share小汪", @"content" : @"为你点赞！", @"time" : @"5月27日 13:54"}
-    ];
+    self.model = [MessageModel dmList];
 }
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return self.model.count;
@@ -43,24 +38,15 @@
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    NSMutableArray *model = [NSMutableArray array];
-    if (indexPath.row == 0) {
-        [model addObject:[ChatModel modelWithContent:@"我是share小格" type:MessageTypeOther avatar:@"share小格"]];
-        [model addObject:[ChatModel modelWithContent:@"我是share小白" type:MessageTypeSelf avatar:@"avatar"]];
-        [model addObject:[ChatModel modelWithContent:@"你的作品我很喜欢！！！" type:MessageTypeOther avatar:@"share小格"]];
-    } else if (indexPath.row == 1) {
-        [model addObject:[ChatModel modelWithContent:@"我是share小宁" type:MessageTypeOther avatar:@"share小宁"]];
-        [model addObject:[ChatModel modelWithContent:@"你好可以问问你是怎么拍的吗？" type:MessageTypeOther avatar:@"share小宁"]];
-    } else if (indexPath.row == 2) {
-        [model addObject:[ChatModel modelWithContent:@"我是share小兰" type:MessageTypeOther avatar:@"share小兰"]];
-        [model addObject:[ChatModel modelWithContent:@"你的项链好漂亮" type:MessageTypeOther avatar:@"share小兰"]];
-        [model addObject:[ChatModel modelWithContent:@"可以给个链接吗" type:MessageTypeOther avatar:@"share小兰"]];
-    } else if (indexPath.row == 3) {
-        [model addObject:[ChatModel modelWithContent:@"快看某音给你分享的视频！！！！" type:MessageTypeSelf avatar:@"avatar"]];
-        [model addObject:[ChatModel modelWithContent:@"小白技术又精进了" type:MessageTypeOther avatar:@"share小汪"]];
-        [model addObject:[ChatModel modelWithContent:@"为你点赞！" type:MessageTypeOther avatar:@"share小汪"]];
-    }
-    ChatVC *chat = [[ChatVC alloc] initWithTitle:self.model[indexPath.row][@"name"] model:model];
+    NSString *name = self.model[indexPath.row][@"name"];
+    NSMutableArray<ChatModel *> *model = [MessageModel chatMessagesForName:name];
+    ChatVC *chat = [[ChatVC alloc] initWithTitle:name model:model];
+    __weak typeof(self) weakSelf = self;
+    chat.modifyLastMessage = ^(NSString *message) {
+        weakSelf.model[indexPath.row][@"content"] = message;
+        NSIndexPath *index = [NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section];
+        [tableView reloadRowsAtIndexPaths:@[index] withRowAnimation:UITableViewRowAnimationAutomatic];
+    };
     [self.navigationController pushViewController:chat animated:YES];
 }
 - (void)viewWillAppear:(BOOL)animated {

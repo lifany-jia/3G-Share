@@ -118,6 +118,11 @@
     [self.navigationController pushViewController:post animated:YES];
 }
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
+    
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"返回"
+                                                                             style:UIBarButtonItemStylePlain
+                                                                            target:self
+                                                                            action:@selector(backToTags)];
     [self doSearch:textField.text];
     [textField resignFirstResponder];
     return YES;
@@ -132,6 +137,8 @@
         view3.hidden = NO;
         self.tableView.hidden = YES;
         self.tabBarController.tabBar.hidden = NO;
+        self.navigationItem.leftBarButtonItem = nil;
+        
     } else if (text.length != 0 && [text isEqualToString:@"大白"]) {
         view1.hidden = YES;
         view2.hidden = YES;
@@ -145,6 +152,17 @@
         self.tableView.hidden = YES;
         self.tabBarController.tabBar.hidden = YES;
     }
+}
+- (void)backToTags {
+    tagView* view1 = [self.view viewWithTag:101];
+    tagView* view2 = [self.view viewWithTag:102];
+    tagView* view3 = [self.view viewWithTag:103];
+    view1.hidden = NO;
+    view2.hidden = NO;
+    view3.hidden = NO;
+    self.tableView.hidden = YES;
+    self.tabBarController.tabBar.hidden = NO;
+    self.navigationItem.leftBarButtonItem = nil;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {

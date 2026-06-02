@@ -17,7 +17,6 @@
 @property (nonatomic, strong) NSMutableArray<ChatModel *> *message;
 @property (nonatomic, strong) MASConstraint *inputBarBottom;
 @property (nonatomic, strong) NSString *nameOther;
-//@property (nonatomic, assign) BOOL isSelf;
 @end
 
 @implementation ChatVC
@@ -147,6 +146,10 @@
     self.tabBarController.tabBar.hidden = NO;
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [self.view endEditing:YES];
+    ChatModel *last = [self.message lastObject];
+     if (self.modifyLastMessage && last.content.length > 0) {
+         self.modifyLastMessage(last.content);
+     }
 }
 - (void)keyboardWillChange:(NSNotification *) notifation {
     CGRect endFrame = [notifation.userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue];

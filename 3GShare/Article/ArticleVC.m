@@ -52,6 +52,7 @@
     self.scr = [[UIScrollView alloc] init];
     self.scr.pagingEnabled = YES;
     self.scr.delegate = self;
+    self.scr.directionalLockEnabled = YES;
     self.scr.bounces = NO;
     self.scr.showsHorizontalScrollIndicator = NO;
     self.scr.contentOffset = CGPointMake(screenWidth, 0);
@@ -138,6 +139,7 @@
     index = MAX(0, MIN(index, 2));
     self.titleSeg.selectedSegmentIndex = index;
 }
+
 //- (void)viewWillAppear:(BOOL)animated {
 //    [super viewWillAppear:animated];
 //    // 如果viewDidLoad已经调用过，该页面不是第一次展示而是离开该页面在其他页面修改数据，再次回到该页面的时候不会重新复用cell
