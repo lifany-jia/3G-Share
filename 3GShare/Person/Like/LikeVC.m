@@ -24,7 +24,7 @@
     self.tableView.dataSource = self;
     [self.view addSubview:self.tableView];
     [self.tableView registerClass:[HomeArticelCell class] forCellReuseIdentifier:@"cell"];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(articleDidChange:) name:@"ArticleLikedDidChange" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(articleDidChange:) name:@"ArticleDidChange" object:nil];
 }
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return self.model.userArticles.count;

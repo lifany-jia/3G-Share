@@ -16,6 +16,8 @@
 @property (nonatomic, strong) TypeArtiModel *model;
 @property (nonatomic, strong) UserInfo *user;
 @property (nonatomic, strong) UIButton *like;
+@property (nonatomic, strong) UIButton *views;
+@property (nonatomic, strong) UIButton *shares;
 @property (nonatomic, strong) ArticleModel *article;
 @end
 
@@ -75,21 +77,21 @@
     [self.like setTitleColor:[UIColor colorWithRed:53.0 / 255.0 green:143.0 / 255.0 blue:203.0 / 255.0 alpha:1.0] forState:UIControlStateNormal];
     [self.headerView addSubview:self.like];
     
-    UIButton *views = [UIButton buttonWithType:UIButtonTypeCustom];
-    [views setImage:[UIImage systemImageNamed:@"eye"] forState:UIControlStateNormal];
-    [views setTitle:[NSString stringWithFormat:@"%ld", (long)self.model.userArticles[0].views] forState:UIControlStateNormal];
-    views.titleLabel.font = [UIFont systemFontOfSize:14];
-    views.tintColor = [UIColor colorWithRed:53.0 / 255.0 green:143.0 / 255.0 blue:203.0 / 255.0 alpha:1.0];
-    [views setTitleColor:[UIColor colorWithRed:53.0 / 255.0 green:143.0 / 255.0 blue:203.0 / 255.0 alpha:1.0] forState:UIControlStateNormal];
-    [self.headerView addSubview:views];
+    self.views = [UIButton buttonWithType:UIButtonTypeCustom];
+    [self.views setImage:[UIImage systemImageNamed:@"eye"] forState:UIControlStateNormal];
+    [self.views setTitle:[NSString stringWithFormat:@"%ld", (long)self.model.userArticles[0].views] forState:UIControlStateNormal];
+    self.views.titleLabel.font = [UIFont systemFontOfSize:14];
+    self.views.tintColor = [UIColor colorWithRed:53.0 / 255.0 green:143.0 / 255.0 blue:203.0 / 255.0 alpha:1.0];
+    [self.views setTitleColor:[UIColor colorWithRed:53.0 / 255.0 green:143.0 / 255.0 blue:203.0 / 255.0 alpha:1.0] forState:UIControlStateNormal];
+    [self.headerView addSubview:self.views];
     
-    UIButton *shares = [UIButton buttonWithType:UIButtonTypeCustom];
-    [shares setImage:[UIImage systemImageNamed:@"arrowshape.turn.up.right"] forState:UIControlStateNormal];
-    [shares setTitle:[NSString stringWithFormat:@"%ld", (long)self.model.userArticles[0].shares] forState:UIControlStateNormal];
-    shares.titleLabel.font = [UIFont systemFontOfSize:14];
-    shares.tintColor = [UIColor colorWithRed:53.0 / 255.0 green:143.0 / 255.0 blue:203.0 / 255.0 alpha:1.0];
-    [shares setTitleColor:[UIColor colorWithRed:53.0 / 255.0 green:143.0 / 255.0 blue:203.0 / 255.0 alpha:1.0] forState:UIControlStateNormal];
-    [self.headerView addSubview:shares];
+    self.shares = [UIButton buttonWithType:UIButtonTypeCustom];
+    [self.shares setImage:[UIImage systemImageNamed:@"arrowshape.turn.up.right"] forState:UIControlStateNormal];
+    [self.shares setTitle:[NSString stringWithFormat:@"%ld", (long)self.model.userArticles[0].shares] forState:UIControlStateNormal];
+    self.shares.titleLabel.font = [UIFont systemFontOfSize:14];
+    self.shares.tintColor = [UIColor colorWithRed:53.0 / 255.0 green:143.0 / 255.0 blue:203.0 / 255.0 alpha:1.0];
+    [self.shares setTitleColor:[UIColor colorWithRed:53.0 / 255.0 green:143.0 / 255.0 blue:203.0 / 255.0 alpha:1.0] forState:UIControlStateNormal];
+    [self.headerView addSubview:self.shares];
     
     
     [avaImaV mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -110,18 +112,18 @@
             make.bottom.equalTo(name);
             make.right.equalTo(self.headerView).offset(-10);
     }];
-    [shares mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.shares mas_makeConstraints:^(MASConstraintMaker *make) {
             make.bottom.equalTo(self.headerView).offset(-15);
             make.right.equalTo(time);
     }];
-    [views mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.equalTo(shares);
-            make.right.equalTo(shares.mas_left).offset(-15);
+    [self.views mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.equalTo(self.shares);
+            make.right.equalTo(self.shares.mas_left).offset(-15);
             make.width.mas_equalTo(50);
     }];
     [self.like mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.equalTo(shares);
-            make.right.equalTo(views.mas_left).offset(-15);
+            make.top.equalTo(self.shares);
+            make.right.equalTo(self.views.mas_left).offset(-15);
             make.width.mas_equalTo(50);
     }];
 #pragma mark - Divider
@@ -160,7 +162,7 @@
     self.tableView.separatorStyle = NO;
     self.tableView.estimatedRowHeight = 200;
     [self.tableView registerClass:[HolidayPhotoCell class] forCellReuseIdentifier:@"cell"];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(likeChange:) name:@"ArticleLikedDidChange" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(articleDidChange:) name:@"ArticleDidChange" object:nil];
 }
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     // 因为这里的self.model.holiday是一个字典，字典的value是id类型
@@ -186,10 +188,13 @@
     self.like.selected = self.article.liked;
     [self.like setTitle:[NSString stringWithFormat:@"%ld", self.article.likes]
                      forState:UIControlStateNormal];
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"ArticleLikedDidChange" object:self.article];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"ArticleDidChange" object:self.article];
 }
-- (void)likeChange:(NSNotification *) notification {
+- (void)articleDidChange:(NSNotification *) notification {
     self.like.selected = self.article.liked;
+    [self.like setTitle:[NSString stringWithFormat:@"%ld", (long)self.article.likes] forState:UIControlStateNormal];
+    [self.views setTitle:[NSString stringWithFormat:@"%ld", (long)self.article.views] forState:UIControlStateNormal];
+    [self.shares setTitle:[NSString stringWithFormat:@"%ld", (long)self.article.shares] forState:UIControlStateNormal];
 }
 /*
 #pragma mark - Navigation

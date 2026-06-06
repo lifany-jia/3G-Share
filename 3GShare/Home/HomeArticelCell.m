@@ -117,6 +117,7 @@
     
     self.views = [UIButton buttonWithType:UIButtonTypeCustom];
     [self.views setImage:[UIImage systemImageNamed:@"eye"] forState:UIControlStateNormal] ;
+    self.views.userInteractionEnabled = NO;
     self.views.tintColor = [UIColor colorWithRed:53.0 / 255.0 green:143.0 / 255.0 blue:203.0 / 255.0 alpha:1.0];
     [containerView addSubview:self.views];
     [self.views mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -128,6 +129,7 @@
     
     self.shares = [UIButton buttonWithType:UIButtonTypeCustom];
     [self.shares setImage:[UIImage systemImageNamed:@"arrowshape.turn.up.right"] forState:UIControlStateNormal] ;
+    [self.shares addTarget:self action:@selector(shareSelected) forControlEvents:UIControlEventTouchUpInside];
     self.shares.tintColor = [UIColor colorWithRed:53.0 / 255.0 green:143.0 / 255.0 blue:203.0 / 255.0 alpha:1.0];
     [containerView addSubview:self.shares];
     [self.shares mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -153,11 +155,11 @@
     self.likes.titleLabel.font = [UIFont systemFontOfSize:10];
     // 不可以这样写
     //self.views.titleLabel.text = [NSString stringWithFormat:@"%ld", (long)model.articles[row].views];
-    [self.views setTitle:[NSString stringWithFormat:@"%ld", (long)article[row].views] forState:UIControlStateNormal];
+    [self.views setTitle:[NSString stringWithFormat:@"%ld", (long)self.model.views] forState:UIControlStateNormal];
     [self.views setTitleColor:[UIColor colorWithRed:53.0 / 255.0 green:143.0 / 255.0 blue:203.0 / 255.0 alpha:1.0] forState:UIControlStateNormal];
     self.views.titleLabel.font = [UIFont systemFontOfSize:10];
     
-    [self.shares setTitle:[NSString stringWithFormat:@"%ld", (long)article[row].shares] forState:UIControlStateNormal];
+    [self.shares setTitle:[NSString stringWithFormat:@"%ld", (long)self.model.shares] forState:UIControlStateNormal];
     [self.shares setTitleColor:[UIColor colorWithRed:53.0 / 255.0 green:143.0 / 255.0 blue:203.0 / 255.0 alpha:1.0] forState:UIControlStateNormal];
     self.shares.titleLabel.font = [UIFont systemFontOfSize:10];
 }
@@ -176,6 +178,13 @@
     self.likes.selected = self.model.liked;
     [self.likes setTitle:[NSString stringWithFormat:@"%ld", self.model.likes]
                       forState:UIControlStateNormal];
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"ArticleLikedDidChange" object:self.model];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"ArticleDidChange" object:self.model];
+}
+
+- (void)shareSelected {
+    self.model.shares++;
+    [self.shares setTitle:[NSString stringWithFormat:@"%ld", (long)self.model.shares]
+                 forState:UIControlStateNormal];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"ArticleDidChange" object:self.model];
 }
 @end

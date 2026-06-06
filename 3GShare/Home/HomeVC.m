@@ -40,7 +40,7 @@
     [self.tableView registerClass:[HomeHeaderCell class] forCellReuseIdentifier:@"headerCell"];
     [self.view addSubview:self.tableView];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(articleDidChange:) name:@"ArticleLikedDidChange" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(articleDidChange:) name:@"ArticleDidChange" object:nil];
 }
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     return 2;
@@ -75,9 +75,17 @@
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    if (indexPath.row == 0) {
+    if (indexPath.section == 0) {
         HolidayVC *holiday = [[HolidayVC alloc] init];
         [self.navigationController pushViewController:holiday animated:YES];
+    } else {
+        ArticleModel *article = self.model.articles[indexPath.row];
+        article.views++;
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"ArticleDidChange" object:article];
+        if ([article.articleName isEqualToString:@"假日"]) {
+            HolidayVC *holiday = [[HolidayVC alloc] init];
+            [self.navigationController pushViewController:holiday animated:YES];
+        }
     }
 }
 

@@ -83,7 +83,7 @@
     [self.scr addSubview:self.featuredView];
     [self.scr addSubview:self.trendingView];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(articleDidChange:) name:@"ArticleLikedDidChange" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(articleDidChange:) name:@"ArticleDidChange" object:nil];
 }
 - (UITableView *)setupTableView {
     UITableView *tableView = [[UITableView alloc] init];
@@ -122,6 +122,16 @@
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    ArticleModel *article;
+    if (tableView.tag == 101) {
+        article = self.model.featuredArticles[indexPath.row];
+    } else if (tableView.tag == 102) {
+        article = self.model.trendingArticles[indexPath.row];
+    } else {
+        article = self.model.allArticles[indexPath.row];
+    }
+    article.views++;
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"ArticleDidChange" object:article];
 }
 - (void)segAction:(UISegmentedControl *) seg {
     NSInteger page = seg.selectedSegmentIndex;
@@ -154,7 +164,7 @@
 //    [self.featuredView reloadData];
 //    [self.trendingView reloadData];
 //    [self.allArticleView reloadData];
-//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(articleDidChange:) name:@"ArticleLikedDidChange" object:nil];
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(articleDidChange:) name:@"ArticleDidChange" object:nil];
 //}
 //- (void)viewWillDisappear:(BOOL)animated {
 //    [super viewWillDisappear:animated];
