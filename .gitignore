@@ -1,0 +1,12 @@
+# macOS 系统文件
+.DS_Store
+
+# Xcode 个人状态(窗口布局、断点、scheme 管理等),与代码无关,不应入库
+xcuserdata/
+*.xcuserstate
+*.xcscmblueprint
+*.xccheckout
+
+# 构建产物
+DerivedData/
+build/
