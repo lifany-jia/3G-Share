@@ -22,6 +22,16 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
+				memory.md,
+				Article/memory.md,
+				Home/memory.md,
+				Login/memory.md,
+				Person/memory.md,
+				Person/Like/memory.md,
+				Person/Message/memory.md,
+				Person/Set/memory.md,
+				Search/memory.md,
+				Task/memory.md,
 			);
 			target = FECD3B372FB47FF000DB38B6 /* 3GShare */;
 		};
