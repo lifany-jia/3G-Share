@@ -119,7 +119,7 @@
     [self.views mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.equalTo(self.shares);
             make.right.equalTo(self.shares.mas_left).offset(-15);
-            make.width.mas_equalTo(50);
+            make.width.mas_equalTo(60);
     }];
     [self.like mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.equalTo(self.shares);
