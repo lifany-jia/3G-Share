@@ -10,17 +10,15 @@
 #import <PhotosUI/PhotosUI.h>
 #import <Masonry/Masonry.h>
 
-@interface PostVC () <UITableViewDelegate, UITableViewDataSource, PHPickerViewControllerDelegate, UIScrollViewDelegate, UITextFieldDelegate>
+@interface PostVC () <PHPickerViewControllerDelegate, UIScrollViewDelegate, UITextFieldDelegate>
 @property (nonatomic, strong) UIView *postView;
 @property (nonatomic, strong) UIButton *dropButton;
 @property (nonatomic, strong) UIButton *postButton;
 @property (nonatomic, strong) UITextField *nameText;
 @property (nonatomic, strong) UITextField *contentText;
-@property (nonatomic, strong) UITableView *dropList;
-@property (nonatomic, assign) BOOL isExpand;
 @property (nonatomic, strong) NSArray *dropOptions;
+@property (nonatomic, copy) NSString *selectedCategory;
 @property (nonatomic, strong) NSMutableArray<UIImage *> *images;
-@property (nonatomic, strong) MASConstraint *contentHeight;
 @property (nonatomic, strong) UIScrollView *photoScrollView;
 @property (nonatomic, strong) UIPageControl *page;
 @property (nonatomic, strong) UILabel *badgeLabel;
@@ -125,9 +123,14 @@
             make.height.mas_equalTo(25);
     }];
     
+    self.dropOptions = @[
+        @"原创作品", @"设计资料", @"设计教程", @"设计观点"
+    ];
+    self.selectedCategory = self.dropOptions.firstObject;
+
     self.dropButton = [UIButton buttonWithType:UIButtonTypeCustom];
     UIButtonConfiguration *config = [UIButtonConfiguration filledButtonConfiguration];
-    config.title = @"原创作品";
+    config.title = self.selectedCategory;
     config.image = [UIImage systemImageNamed:@"chevron.down"];
     config.imagePadding = 10;
     config.imagePlacement = NSDirectionalRectEdgeTrailing;
@@ -147,7 +150,8 @@
     self.dropButton.layer.shadowOffset = CGSizeMake(2, 2);
     self.dropButton.layer.shadowRadius = 2;
     self.dropButton.layer.shadowOpacity = 0.1;
-    [self.dropButton addTarget:self action:@selector(toggleDropList) forControlEvents:UIControlEventTouchUpInside];
+    // 点击直接弹出系统 UIMenu，不再使用自定义 UITableView 展开
+    self.dropButton.showsMenuAsPrimaryAction = YES;
     [self.view addSubview:self.dropButton];
     [self.dropButton mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.equalTo(xian.mas_bottom).offset(30);
@@ -155,23 +159,33 @@
             make.right.equalTo(self.view).offset(-30);
             make.height.mas_equalTo(30);
     }];
-    
-    self.dropOptions = @[
-        @"原创作品", @"设计资料", @"设计教程", @"设计观点"
-    ];
-    self.dropList = [[UITableView alloc] init];
-    self.dropList.delegate = self;
-    self.dropList.dataSource = self;
-    self.dropList.layer.cornerRadius = 10;
-    self.dropList.rowHeight = 30;
-    [self.dropList registerClass:[UITableViewCell class] forCellReuseIdentifier:@"cell"];
-    [self.view addSubview:self.dropList];
-    [self.dropList mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.equalTo(self.dropButton.mas_bottom).offset(2);
-            make.left.right.equalTo(self.dropButton);
-            self.contentHeight = make.height.mas_equalTo(0); // 默认收起
-    }];
-    
+    [self updateCategoryMenu];
+
+}
+
+#pragma mark - 分区菜单
+/// 根据 dropOptions 重新构建分区选择菜单，并刷新当前选中项的勾选态。
+- (void)updateCategoryMenu {
+    __weak typeof(self) weakSelf = self;
+    NSMutableArray<UIAction *> *actions = [NSMutableArray array];
+    for (NSString *option in self.dropOptions) {
+        UIAction *action = [UIAction actionWithTitle:option image:nil identifier:nil handler:^(__kindof UIAction * _Nonnull action) {
+            // menu 由 dropButton 持有，handler 内必须用弱引用避免保留环
+            __strong typeof(weakSelf) strongSelf = weakSelf;
+            if (!strongSelf) { return; }
+            strongSelf.selectedCategory = option;
+            // 同步按钮标题
+            UIButtonConfiguration *config = strongSelf.dropButton.configuration;
+            config.title = option;
+            strongSelf.dropButton.configuration = config;
+            // 重新构建菜单，刷新勾选状态
+            [strongSelf updateCategoryMenu];
+        }];
+        // 当前选中项显示系统勾选态
+        action.state = [option isEqualToString:self.selectedCategory] ? UIMenuElementStateOn : UIMenuElementStateOff;
+        [actions addObject:action];
+    }
+    self.dropButton.menu = [UIMenu menuWithTitle:@"" children:actions];
 }
 
 #pragma mark - setupTagView
@@ -288,23 +302,7 @@
 - (void)banDownLoadAction:(UIButton *)but {
     but.selected = !but.selected;
 }
-- (void)toggleDropList {
-    self.isExpand = !self.isExpand;
-    CGFloat height = self.isExpand ? 30.0 * self.dropOptions.count : 0;
-    if (self.isExpand) {
-        // 最上层
-            [self.view bringSubviewToFront:self.dropList];
-        }
-    self.contentHeight.mas_equalTo(height);
-    [UIView animateWithDuration:0.25 animations:^{
-            self.dropButton.imageView.transform = self.isExpand ? CGAffineTransformMakeRotation(M_PI) : CGAffineTransformIdentity;
-            [self.view layoutIfNeeded];
-    }];
-}
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
-    if (self.isExpand) {
-        [self toggleDropList];
-    }
     [self.view endEditing:YES];
 }
 - (void)selectPhoto {
@@ -380,22 +378,6 @@
     }];
     [alert addAction:confirm];
     [self presentViewController:alert animated:YES completion:nil];
-}
-#pragma mark - tableView
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return self.dropOptions.count;
-}
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell" forIndexPath:indexPath];
-    cell.textLabel.text = self.dropOptions[indexPath.row];
-    cell.textLabel.font = [UIFont systemFontOfSize:14];
-    return cell;
-}
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    NSString *selected = self.dropOptions[indexPath.row];
-    [self.dropButton setTitle:selected forState:UIControlStateNormal];
-    [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    [self toggleDropList];
 }
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     CGFloat width = scrollView.bounds.size.width;
